@@ -16,7 +16,7 @@ maintainer directly.
 Of particular interest:
 
 - A `permissions.yml` pattern that fails to block a command it claims to block
-- A gap in `scripts/compile-permissions.js` that produces a weaker
+- A gap in `scripts/compile-permissions.cjs` that produces a weaker
   `.claude/settings.json` or git hook than the source policy intends
 - A `vibe check` false-negative on a real secret-exposure pattern
 - Any adapter or skill instruction that would lead an agent to expose

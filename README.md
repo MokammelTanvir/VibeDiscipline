@@ -32,7 +32,7 @@ npx degit <org>/vibediscipline/.agent/skills .agent/skills
 # Skills + enforced permissions + AGENTS.md (recommended for most projects)
 npx vibe init --tier governed     # ships in v0.3; for now, copy manually:
 #   .agent/  AGENTS.md  CLAUDE.md  scripts/
-#   then run: node scripts/compile-permissions.js
+#   then run: node scripts/compile-permissions.cjs
 ```
 
 ## What's in v0.1
@@ -45,7 +45,7 @@ AGENTS.md                    the constitution (≤100 lines)
 .agent/ecosystems/php/        PHP/Composer-level knowledge
 .agent/adapters/laravel/      Laravel conventions + AI-specific pitfalls (Tier A)
 scripts/check.sh              vibe check — executable slop detection
-scripts/compile-permissions.js
+scripts/compile-permissions.cjs
 scripts/validate-portability.sh
 evals/                        trap tasks proving the system changes agent behavior
 ```

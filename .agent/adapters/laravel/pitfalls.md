@@ -35,3 +35,17 @@ the model already has is not worth encoding; specific failure modes are.
   under `config:cache`).
 - Tinker (`php artisan tinker`) is for inspection, not for making data
   changes that should go through a migration or seeder.
+- **Framework notifications are not queued by default** — `Illuminate\Auth\Notifications\VerifyEmail`
+  (and other stock auth notifications) extend `Notification`, not
+  `ShouldQueue`, even when the project has a real queue connection
+  configured. If an acceptance criterion requires a queued send, subclass
+  the stock notification and add `ShouldQueue` + `Queueable` rather than
+  hand-rolling a new mail path — then override the relevant
+  `send...Notification()` method on the model to use the subclass.
+- **Rate-limit test trap**: Laravel's default `throttle:N,M` middleware
+  keys on the authenticated user's id when the request is authenticated,
+  not just IP. A test loop that logs a new user in on each iteration
+  (e.g. testing registration throttling, where each success auto-logs
+  the new account in) silently resets the bucket every time — log out
+  between attempts, or otherwise keep the request unauthenticated, to
+  actually exercise the same throttle key.

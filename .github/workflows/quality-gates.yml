@@ -50,7 +50,7 @@ jobs:
 
       - name: permissions.yml compiles cleanly and idempotently
         run: |
-          node scripts/compile-permissions.js
+          node scripts/compile-permissions.cjs
           cp .claude/settings.json /tmp/settings.1.json
-          node scripts/compile-permissions.js
+          node scripts/compile-permissions.cjs
           diff /tmp/settings.1.json .claude/settings.json

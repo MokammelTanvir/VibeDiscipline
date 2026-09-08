@@ -12,11 +12,12 @@ always-loaded instruction — keep it under 100 lines. Detail lives in skills.
 | **XS** | Typo, copy, comment, config value | Edit → verify → commit. No plan, no doc, no test. |
 | **S** | Bug fix, small enhancement, single file | Reproduce → root cause → fix → regression test → self-review → commit |
 | **M** | New feature in existing system, schema addition | Recon → plan w/ acceptance criteria → **approval** → implement → tests → review → security scan → diff review → commit → docs |
-| **L** | New subsystem/service, architectural change, auth/payment/multi-tenancy | Discovery → PRD → TRD → Architecture/ADR → UI/UX → task breakdown → **approval** → M-tier loop per task |
+| **L** | New subsystem/service, architectural change, new auth/payment/multi-tenancy *architecture* | Discovery → PRD → TRD → Architecture/ADR → UI/UX → task breakdown → **approval** → M-tier loop per task |
 
 State the tier in one line before starting: `Tier: S — bug fix in cart total, single file.`
-**Default to the lowest plausible tier.** Escalate only if: touches auth/payments/PII,
-changes a schema or public API, needs a new dependency, affects >~5 files, or the
+**Default to the lowest plausible tier.** Escalate only if: new auth *architecture* (not
+a routine feature using an existing auth pattern), payments/PII, a changed schema or
+public API, a new dependency, affects >~5 files, or the
 requirement is ambiguous. Never invent ceremony no one asked for — see
 `.agent/skills/_shared/ceremony-tiers.md` for the full routing rules.
 

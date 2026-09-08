@@ -18,7 +18,11 @@ loads: [_shared/ceremony-tiers.md, _shared/config-resolution.md]
    stale, run `recon` first.
 
 3. Write acceptance criteria — **testable statements only**. "Works well"
-   is not a criterion. "Returns 422 with a `message` key" is.
+   is not a criterion. "Returns 422 with a `message` key" is — but check
+   which surface this actually is first: a 422 JSON body only applies to
+   an API/XHR consumer. A traditional server-rendered form (Blade, plain
+   HTML) redirects back with session validation errors on failure — state
+   whichever one the app actually is, don't default to the JSON framing.
 
 4. Write explicit non-goals — the scope fence. Mandatory at Tier M+.
 

@@ -1,0 +1,105 @@
+# VibeDiscipline permission policy — source of truth.
+# Compiled by scripts/compile-permissions.sh into:
+#   .claude/settings.json  ·  .husky (or .git/hooks) pre-commit/pre-push  ·  docs/PERMISSIONS.md
+# Do not hand-edit the generated targets — edit this file and recompile.
+
+version: 1
+mode: auto        # auto | guided | strict
+
+commands:
+  allow:
+    - "git status"
+    - "git diff*"
+    - "git log*"
+    - "git branch*"
+    - "git show*"
+    - "composer test*"
+    - "composer lint*"
+    - "php artisan test*"
+    - "php artisan route:list*"
+    - "php artisan tinker --execute=*"
+    - "./vendor/bin/pest*"
+    - "./vendor/bin/phpunit*"
+    - "./vendor/bin/pint*"
+    - "./vendor/bin/phpstan*"
+    - "npm run test*"
+    - "npm run lint*"
+    - "npm run build*"
+    - "pnpm test*"
+    - "pnpm lint*"
+
+  confirm:
+    - "composer require *"
+    - "composer remove *"
+    - "composer update*"
+    - "npm install *"
+    - "pnpm add *"
+    - "php artisan migrate*"
+    - "php artisan db:seed*"
+    - "php artisan make:*"
+    - "git push*"
+    - "git rebase*"
+    - "git merge*"
+    - "docker*"
+    - "*deploy*"
+
+  deny:
+    - "git push --force*"
+    - "git push -f*"
+    - "git reset --hard*"
+    - "git clean -fd*"
+    - "rm -rf *"
+    - "php artisan migrate:fresh*"
+    - "php artisan migrate:reset*"
+    - "php artisan db:wipe*"
+    - "*DROP DATABASE*"
+    - "*DROP TABLE*"
+    - "*TRUNCATE*"
+    - "curl * | sh"
+    - "curl * | bash"
+    - "chmod 777*"
+    - "*--no-verify*"
+
+files:
+  allow:
+    - "app/**"
+    - "resources/**"
+    - "routes/**"
+    - "tests/**"
+    - "docs/**"
+    - "database/factories/**"
+
+  confirm:
+    - ".env*"
+    - "database/migrations/**"
+    - "database/seeders/**"
+    - "config/**"
+    - "docker-compose*.yml"
+    - "Dockerfile*"
+    - ".github/workflows/**"
+    - "composer.json"
+    - "package.json"
+    - "composer.lock"
+    - "package-lock.json"
+    - "pnpm-lock.yaml"
+
+  deny:
+    - ".git/**"
+    - "**/*.pem"
+    - "**/*.key"
+    - "**/*.p12"
+    - "**/id_rsa*"
+    - "**/.ssh/**"
+    - "storage/oauth-*.key"
+
+network:
+  allow: ["read-only fetch of public documentation"]
+  confirm: ["any request that mutates external state"]
+  deny: ["sending repository contents to third-party services"]
+
+escalation:
+  on_deny: >
+    Stop. Explain what was attempted, why it is denied, and what the
+    human can do instead. Never attempt an equivalent workaround.
+  on_confirm_timeout: stop
+  approval_scope: single-invocation

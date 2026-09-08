@@ -112,3 +112,12 @@ Mode: **auto**
 
 Run `git config core.hooksPath .githooks` once per clone to activate layer 3
 locally (the compiler attempts this automatically — see below).
+
+## Branch policy
+
+`git.protect_main_branch` in `.agent/config.yml` is **off**
+for this project — direct `git push` to `main`/`master` is
+allowed by the pre-push hook (this project pushes to it directly).
+This hook cannot distinguish a human push from an agent one — it only
+sees a branch name — so it applies equally to both; an agent's own
+`git push*` still goes through the CONFIRM gate above independently.

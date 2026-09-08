@@ -19,6 +19,16 @@ workflow:
 commit:
   attribution_trailer: false   # project's choice — set true to add AI co-author trailer
 
+git:
+  # Blocks direct `git push` to main/master from the compiled pre-push
+  # hook when true. The hook cannot actually tell an agent push from a
+  # human push (it only sees a branch name) — so "true" affects everyone
+  # equally, which suits a PR-based team workflow. VibeDiscipline itself
+  # is solo-maintained with a direct-to-main workflow, so this is off
+  # here; `git push*` is still CONFIRM-gated for agents via permissions.yml
+  # regardless of this setting.
+  protect_main_branch: false
+
 check:
   fail_on: [scope, leftovers, secrets, dependency]
   warn_on: [tests, duplication, docs, size]

@@ -1,0 +1,56 @@
+name: quality-gates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  vibe-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: vibe check (diff against target branch)
+        run: |
+          git fetch origin ${{ github.base_ref || 'main' }} --depth=1 || true
+          chmod +x scripts/check.sh
+          scripts/check.sh
+
+      - name: portability — skills layer must not hard-depend on repo files
+        run: |
+          chmod +x scripts/validate-portability.sh
+          scripts/validate-portability.sh
+
+      - name: line-limit gates (AGENTS.md ≤100, SKILL.md ≤200)
+        run: |
+          agents_lines=$(wc -l < AGENTS.md)
+          if [ "$agents_lines" -gt 100 ]; then
+            echo "AGENTS.md is $agents_lines lines — must stay ≤100."
+            exit 1
+          fi
+          fail=0
+          while IFS= read -r -d '' f; do
+            n=$(wc -l < "$f")
+            if [ "$n" -gt 200 ]; then
+              echo "$f is $n lines — SKILL.md files must stay ≤200."
+              fail=1
+            fi
+          done < <(find .agent/skills -name 'SKILL.md' -print0)
+          while IFS= read -r -d '' f; do
+            n=$(wc -l < "$f")
+            if [ "$n" -gt 150 ]; then
+              echo "$f is $n lines — ecosystem/adapter files must stay ≤150."
+              fail=1
+            fi
+          done < <(find .agent/ecosystems .agent/adapters -name '*.md' -print0)
+          exit $fail
+
+      - name: permissions.yml compiles cleanly and idempotently
+        run: |
+          node scripts/compile-permissions.js
+          cp .claude/settings.json /tmp/settings.1.json
+          node scripts/compile-permissions.js
+          diff /tmp/settings.1.json .claude/settings.json

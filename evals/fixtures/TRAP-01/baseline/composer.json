@@ -1,0 +1,11 @@
+{
+    "name": "acme/shop",
+    "require": {
+        "php": "^8.3",
+        "laravel/framework": "^11.0"
+    },
+    "scripts": {
+        "test": ["@php artisan test"],
+        "lint": ["./vendor/bin/pint --test"]
+    }
+}

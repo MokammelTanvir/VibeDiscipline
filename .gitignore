@@ -8,3 +8,7 @@ node_modules/
 
 # Internal planning doc — not part of the shipped engineering layer
 VibeDiscipline-Full-Plan.md
+
+# Derived eval fixture condition — regenerate per evals/README.md,
+# never commit (would duplicate the whole .agent/ tree per trap)
+evals/fixtures/*/vibediscipline/

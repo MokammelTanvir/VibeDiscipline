@@ -2,32 +2,38 @@
 Updated: 2026-09-09
 
 ## Now
-v0.1 dogfood cycle #1 complete: fresh Laravel app + full engineering
-lifecycle (recon → plan → approve → implement → test → review → commit →
-handoff) run for real on TASK-001 (registration + email verification).
-Findings fed back into this repo. v0.1's "done" checklist (§45) still
-needs 1 more real dogfood project and the 5 trap tasks actually run
-(not just specified) before calling v0.1 complete.
+**v0.1 is complete** per the §45 checklist, with the 2nd-dogfood-project
+item explicitly deferred (not skipped) rather than done — see below.
 
 ## Done this task
-- v0.1 scaffold (prior session)
-- Dogfood project: ~/vibediscipline-demo-laravel — fresh Laravel 13,
-  Pest, SQLite, VibeDiscipline installed Tier 2/3 manually (no CLI yet)
-- TASK-001 run end-to-end at Tier M, 15 passing tests, committed
-- 4 findings surfaced and 3 fixed upstream here:
-  1. compile-permissions.js -> .cjs (ESM crash under "type":"module")
-  2. ceremony-tiers.md: distinguished new auth architecture from a
-     routine feature using an existing auth pattern
-  3. planning/SKILL.md: caveat that "422" assumes a JSON consumer
-  4. adapters/laravel/pitfalls.md: stock notifications aren't queued by
-     default; throttle keys on user id, not just IP
+- Dogfood cycle #1 (fresh Laravel project, TASK-001) — prior session
+- 4 findings fixed upstream (ESM .cjs, ceremony-tier auth ambiguity,
+  planning template caveat, Laravel adapter pitfalls) — prior session
+- Branch-protection hook made configurable (git.protect_main_branch) —
+  prior session
+- **Trap eval cycle 1**: 5 traps × 2 conditions (baseline vs
+  vibediscipline) run as isolated subagents against matched fixtures.
+  10/10 passed stated criteria. Full results: evals/results/v0.1-cycle-1.md
+  - Headline: a strong baseline model already avoids most classic slop
+    failures on its own — an honest finding, reported as such
+  - TRAP-04 surfaced one substantive difference: VibeDiscipline correctly
+    escalated to Tier M and stopped to ask whether a migration had run
+    elsewhere before editing it; baseline proceeded on an unstated,
+    unverified assumption
+  - Fixtures committed under evals/fixtures/*/baseline/ (hand-authored,
+    reusable); the vibediscipline/ condition is derived per
+    evals/README.md, never committed (would duplicate .agent/ per trap)
 
-## Next
-1. Write the 5 v0.1 trap tasks results — they're specified in evals/
-   but not yet actually run against a real agent session
-2. Dogfood on a 2nd real project (existing codebase, not greenfield,
-   to test the recon/adapt-don't-override path for real)
-3. Once both are done, v0.1 can be considered complete per §45
+## Next (v0.2 candidates, not v0.1 blockers)
+1. 2nd dogfood project on an EXISTING (non-greenfield) codebase — explicitly
+   deferred by the user's call, not done. Needed before claiming the
+   "adapt, don't override" path is proven, not before claiming v0.1 done.
+2. Eval cycle 2: repeated sampling (3-5 runs/condition), bootable fixtures
+   (real vendor/, runnable artisan) so the deny-list can be observed
+   actually blocking a live attempt, and a deliberately more slop-prone
+   baseline for a sharper signal
+3. PRD/TRD/ADR templates, UI/UX skill, more adapters, vibe CLI (all
+   already-planned v0.2/v0.3 scope, unchanged)
 
 ## Blocked
 - None
@@ -36,6 +42,9 @@ needs 1 more real dogfood project and the 5 trap tasks actually run
 - v0.1 scope excludes .agent/rules/ and .agent/workflows/ as separate
   directories — covered by AGENTS.md + _shared/ without duplication
 - v0.1 dogfood stack: Laravel (PHP ecosystem pack + Laravel adapter, Tier A)
+- v0.1 "done" bar interpreted as: scaffold + 1 real dogfood project +
+  trap evals run for real — 2nd dogfood project explicitly moved to v0.2
+  by user decision, documented rather than silently dropped
 
 ## Do not touch
 - None

@@ -1,0 +1,62 @@
+name: laravel
+tier: A
+ecosystem: php
+version_range: ">=10"
+
+detect:
+  files:
+    - "artisan"
+    - "config/app.php"
+  manifest:
+    composer.json:
+      require: ["laravel/framework"]
+
+composes_with: [vue, react, inertia, livewire, tailwind, filament, blade]
+
+prefer_scripts:
+  test:      ["composer test", "php artisan test"]
+  lint:      ["composer lint", "./vendor/bin/pint --test"]
+  format:    ["./vendor/bin/pint"]
+  analyse:   ["composer analyse", "./vendor/bin/phpstan analyse"]
+  migrate:   ["php artisan migrate"]     # CONFIRM-gated in permissions.yml
+
+artifacts:
+  model:
+    path: app/Models
+    naming: "PascalCase singular (User, OrderLine)"
+  controller:
+    path: app/Http/Controllers
+    naming: "{Resource}Controller"
+  request:
+    path: app/Http/Requests
+    naming: "{Action}{Resource}Request (StoreOrderRequest)"
+  service:
+    path: app/Services
+    naming: "{Domain}Service"
+  policy:
+    path: app/Policies
+    naming: "{Model}Policy"
+  migration:
+    path: database/migrations
+    risk: HIGH
+  seeder:
+    path: database/seeders
+    naming: "{Model}Seeder"
+  factory:
+    path: database/factories
+    naming: "{Model}Factory"
+  feature_test:
+    path: tests/Feature
+  unit_test:
+    path: tests/Unit
+  job:
+    path: app/Jobs
+  notification:
+    path: app/Notifications
+  event:
+    path: app/Events
+  listener:
+    path: app/Listeners
+
+risk_paths:
+  HIGH: ["database/migrations/**", "config/**", ".env*"]

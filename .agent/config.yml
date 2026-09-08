@@ -1,0 +1,25 @@
+# VibeDiscipline project configuration
+version: 1
+mode: auto              # auto | guided | strict
+
+stack:
+  ecosystem: php
+  backend: laravel
+  frontend: none         # set to blade | vue | react | inertia-vue etc. once known
+  database: mysql
+
+workflow:
+  require_plan: true          # Tier M+ requires a task doc before implementing
+  require_tests: true
+  require_review: true
+  require_security_review: true
+  require_git_diff_review: true
+  approval_gate_tier: M        # lowest tier that requires recorded human approval
+
+commit:
+  attribution_trailer: false   # project's choice — set true to add AI co-author trailer
+
+check:
+  fail_on: [scope, leftovers, secrets, dependency]
+  warn_on: [tests, duplication, docs, size]
+  ignore: []

@@ -58,3 +58,10 @@ the model already has is not worth encoding; specific failure modes are.
   the redirect target never renders `session('status')`, `assertSessionHas`
   is green but the page is silent. Add one `followingRedirects()` test that
   asserts the message appears in the page.
+- **A migration that is pending here may already have run elsewhere.** The
+  "never edit a migration that has already run" rule is about *this*
+  database, but the same migration file can be applied in a teammate's
+  local DB, staging or production while still showing "Pending" in yours
+  (merged branch, unmerged branch, different machine). Before editing or
+  replacing one in place, ask whether it has run anywhere else; if yes, add
+  a new migration instead. Cycle 2: no VibeDiscipline run asked this.

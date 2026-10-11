@@ -24,11 +24,11 @@ docs/tasks/{TASK-001,BOARD}.md, this file.
   TRAP-02 (regression test). Data safety identical. See v0.1-cycle-2.md.
 
 ## Next
-1. Decide the open items below, then commit the cycle-2 work.
+1. Re-test the corrected confirm-gate wording (TRAP-06 VD, n=3); commit pending.
 2. Headless `claude -p` run inside a scratch repo to observe the compiled
    deny/confirm list actually enforcing (needs a tool-grant decision).
-3. Failure-loop fixes from cycle 2 (separate Tier S tasks): pitfall for
-   "pending migration that may have run elsewhere"; confirm-gate wording.
+3. Failure-loop fixes done (uncommitted): implement "Before running a command",
+   pitfall "pending migration may have run elsewhere"; see results addendum.
 4. P1 v0.2: testing/security/debug skills only where a failure was seen;
    then templates, adapter contract, more traps.
 

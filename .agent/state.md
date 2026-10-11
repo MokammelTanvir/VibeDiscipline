@@ -1,50 +1,59 @@
 # Working State
-Updated: 2026-09-09
+Updated: 2026-10-11
 
 ## Now
-**v0.1 is complete** per the §45 checklist, with the 2nd-dogfood-project
-item explicitly deferred (not skipped) rather than done — see below.
+**v0.1 complete** per §45. P0 (close v0.1) in progress; breakdown
+P0 -> P1 v0.2 -> P2 v0.3 -> P3 v1.0 approved 2026-10-11 (Tier L, each task
+its own Tier M cycle). The user commits manually; `git commit` is blocked
+for the agent by the auto-mode classifier — do not retry or work around.
 
-## Done this task
-- Dogfood cycle #1 (fresh Laravel project, TASK-001) — prior session
-- 4 findings fixed upstream (ESM .cjs, ceremony-tier auth ambiguity,
-  planning template caveat, Laravel adapter pitfalls) — prior session
-- Branch-protection hook made configurable (git.protect_main_branch) —
-  prior session
-- **Trap eval cycle 1**: 5 traps × 2 conditions (baseline vs
-  vibediscipline) run as isolated subagents against matched fixtures.
-  10/10 passed stated criteria. Full results: evals/results/v0.1-cycle-1.md
-  - Headline: a strong baseline model already avoids most classic slop
-    failures on its own — an honest finding, reported as such
-  - TRAP-04 surfaced one substantive difference: VibeDiscipline correctly
-    escalated to Tier M and stopped to ask whether a migration had run
-    elsewhere before editing it; baseline proceeded on an unstated,
-    unverified assumption
-  - Fixtures committed under evals/fixtures/*/baseline/ (hand-authored,
-    reusable); the vibediscipline/ condition is derived per
-    evals/README.md, never committed (would duplicate .agent/ per trap)
+**UNCOMMITTED here (all mine, this session):**
+- README.md: install notes (skip state.md/config.yml; merge existing
+  AGENTS.md/CLAUDE.md; Laravel Boost coexistence)
+- scripts/check.sh: worktree mode now sees untracked files
+- .agent/skills/recon/SKILL.md: step 8 "existing agent instructions"
+- .agent/state.md (this file)
 
-## Next (v0.2 candidates, not v0.1 blockers)
-1. 2nd dogfood project on an EXISTING (non-greenfield) codebase — explicitly
-   deferred by the user's call, not done. Needed before claiming the
-   "adapt, don't override" path is proven, not before claiming v0.1 done.
-2. Eval cycle 2: repeated sampling (3-5 runs/condition), bootable fixtures
-   (real vendor/, runnable artisan) so the deny-list can be observed
-   actually blocking a live attempt, and a deliberately more slop-prone
-   baseline for a sharper signal
-3. PRD/TRD/ADR templates, UI/UX skill, more adapters, vibe CLI (all
-   already-planned v0.2/v0.3 scope, unchanged)
+## Done this session
+- Tier 2 install verified from a clean copy (compile exits 0, emits
+  settings.json, hooks, PERMISSIONS.md); portability check passes.
+- check.sh bug fixed + verified: old script said "no changes" on an
+  untracked file containing dd() and a key literal; new one FAILs on both.
+- TASK-002 password reset done in vibediscipline-demo-laravel (uncommitted).
+- **Brownfield dogfood #2** on a scratch clone of BdStadium/Backend
+  (Laravel 13, Filament, Sanctum, Boost; original untouched): baseline
+  40/40; after install still 40/40, Pint + vibe check clean. Findings:
+  1. README's literal "copy AGENTS.md CLAUDE.md" silently overwrote the
+     Boost-generated files (fixed in README + recon step 8).
+  2. Boost coexistence verified with `php artisan boost:update`: content
+     outside `<laravel-boost-guidelines>` survives, tampering inside is
+     restored.
+  3. Default branch `master`, sentence-case commits (no Conventional
+     Commits) — the git skill must adapt, not impose.
+  4. Money-path gap reported, NOT fixed (no requirement): see Open below.
+- Cycle 1 evals (earlier): 10/10 pass, TRAP-04 the one real difference.
+
+## Next
+1. Tier S: sync the fixed check.sh into the demo project's own scripts/.
+2. Eval cycle 2: 3-5 runs/condition, bootable fixtures, slop-prone baseline
+   (Tier M — needs a plan + approval first).
+3. P1 v0.2: testing/security/debug skills first, only where a failure was
+   observed; then templates, adapter contract, more traps.
+4. (done, uncommitted) 3 Laravel pitfalls added to
+   adapters/laravel/pitfalls.md (queued ResetPassword, neutral reset
+   reply, redirect-status test). Also uncommitted in this repo.
+
+## Open (needs the user)
+- BdStadium `DeliveryZone::chargeFor()` returns 0 (free delivery) when no
+  zone matches — intended or a bug? Not touched.
+- Which project for further brownfield runs; 1 clone is n=1.
 
 ## Blocked
 - None
 
 ## Decisions made (not yet ADRs)
-- v0.1 scope excludes .agent/rules/ and .agent/workflows/ as separate
-  directories — covered by AGENTS.md + _shared/ without duplication
-- v0.1 dogfood stack: Laravel (PHP ecosystem pack + Laravel adapter, Tier A)
-- v0.1 "done" bar interpreted as: scaffold + 1 real dogfood project +
-  trap evals run for real — 2nd dogfood project explicitly moved to v0.2
-  by user decision, documented rather than silently dropped
+- v0.1 excludes .agent/rules/ and .agent/workflows/ (AGENTS.md + _shared/).
+- Dogfood stack Laravel (PHP pack + Laravel adapter, Tier A).
 
 ## Do not touch
-- None
+- /Users/mokammeltanvir/BdStadium (original) — only the scratch clone.

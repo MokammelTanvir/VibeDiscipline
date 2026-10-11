@@ -15,15 +15,22 @@ MODE="${1:-worktree}"
 FAIL=0
 WARN=0
 
+# In worktree mode, brand-new files are not in `git diff` until they are
+# staged — include them (minus .gitignore'd files) so a new test file counts
+# and a new file with a secret or debug call is still scanned.
+UNTRACKED_FILES=""
 if [ "$MODE" = "--staged" ]; then
   DIFF_FILES_CMD="git diff --cached --name-only"
   DIFF_CONTENT_CMD="git diff --cached -U0"
 else
   DIFF_FILES_CMD="git diff --name-only"
   DIFF_CONTENT_CMD="git diff -U0"
+  UNTRACKED_FILES=$(git ls-files --others --exclude-standard 2>/dev/null)
 fi
 
-CHANGED_FILES=$($DIFF_FILES_CMD 2>/dev/null)
+CHANGED_FILES=$(
+  { $DIFF_FILES_CMD 2>/dev/null; [ -n "$UNTRACKED_FILES" ] && echo "$UNTRACKED_FILES"; } | sed '/^$/d' | sort -u
+)
 
 if [ -z "$CHANGED_FILES" ]; then
   echo "[vibe check] no changes to inspect."
@@ -39,6 +46,13 @@ diff_for() {
   if [ -z "$1" ]; then return 0; fi
   # shellcheck disable=SC2086
   $DIFF_CONTENT_CMD -- $1 2>/dev/null
+  # Untracked files have no diff against HEAD; show each as all-added lines.
+  local f
+  for f in $UNTRACKED_FILES; do
+    if echo "$1" | grep -qxF -- "$f"; then
+      git diff --no-index -U0 -- /dev/null "$f" 2>/dev/null || true
+    fi
+  done
 }
 
 echo "vibe check — $(echo "$CHANGED_FILES" | wc -l | tr -d ' ') file(s) changed"
@@ -46,7 +60,7 @@ echo ""
 
 # ── secrets ──────────────────────────────────────────────────────────
 SECRET_PATTERN='(-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}|xox[baprs]-[0-9A-Za-z-]{10,}|api[_-]?key\s*[:=]\s*["'"'"'][A-Za-z0-9]{16,}|secret\s*[:=]\s*["'"'"'][A-Za-z0-9]{16,})'
-SECRET_HITS=$($DIFF_CONTENT_CMD 2>/dev/null | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -E "$SECRET_PATTERN" || true)
+SECRET_HITS=$(diff_for "$CHANGED_FILES" | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -E "$SECRET_PATTERN" || true)
 ENV_HITS=$(echo "$CHANGED_FILES" | grep -E '(^|/)\.env(\..*)?$' | grep -v '\.env\.example$' || true)
 
 if [ -n "$SECRET_HITS" ] || [ -n "$ENV_HITS" ]; then

@@ -25,6 +25,19 @@ INSPECT → UNDERSTAND → PLAN → IMPLEMENT → VERIFY → REVIEW
 - [ ] Identify the boundaries the change touches
 - [ ] Confirm the ceremony tier is still correct now that the code is visible
 
+## Before running a command
+
+- [ ] If `.agent/permissions.yml` exists, match the command against it.
+      **deny**: never run it, never work around it. **confirm**: ask the
+      human first and wait — even when you expect it to fail or to be
+      harmless (a failing `php artisan migrate` still creates the
+      `migrations` table before the failing migration runs). If nobody can
+      answer, stop and report; do not run it.
+- [ ] Get the same facts read-only first (`migrate:status`,
+      `sqlite3 -readonly`) before reaching for any confirm-tier command.
+      `php artisan migrate --pretend` is NOT read-only: it creates the
+      `migrations` table if missing.
+
 ## While implementing
 
 - Match the surrounding code's style, naming, and idiom — not personal

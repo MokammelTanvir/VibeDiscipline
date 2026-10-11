@@ -36,7 +36,7 @@ the model already has is not worth encoding; specific failure modes are.
 - Tinker (`php artisan tinker`) is for inspection, not for making data
   changes that should go through a migration or seeder.
 - **Framework notifications are not queued by default** — `Illuminate\Auth\Notifications\VerifyEmail`
-  (and other stock auth notifications) extend `Notification`, not
+  and `ResetPassword` (hit in two separate tasks; and other stock auth notifications) extend `Notification`, not
   `ShouldQueue`, even when the project has a real queue connection
   configured. If an acceptance criterion requires a queued send, subclass
   the stock notification and add `ShouldQueue` + `Queueable` rather than
@@ -49,3 +49,12 @@ the model already has is not worth encoding; specific failure modes are.
   the new account in) silently resets the bucket every time — log out
   between attempts, or otherwise keep the request unauthenticated, to
   actually exercise the same throttle key.
+- **Password-reset replies must not reveal whether an account exists.**
+  `Password::sendResetLink()` returns `INVALID_USER` / `RESET_THROTTLED`
+  statuses that differ for known vs unknown emails — ignore the status and
+  show one neutral message, and do not add `exists:users,email` to the
+  request rules.
+- **A redirect-with-status test can pass while the user sees nothing**: if
+  the redirect target never renders `session('status')`, `assertSessionHas`
+  is green but the page is silent. Add one `followingRedirects()` test that
+  asserts the message appears in the page.

@@ -49,6 +49,13 @@ unfamiliar repository, and it runs once — its output is cached.
 7. **Gaps** — missing tests, dead code, TODO clusters. **Report only.**
    Fixing unrequested gaps is unrequested work.
 
+8. **Existing agent instructions** — `AGENTS.md`, `CLAUDE.md`,
+   `.cursor/rules`, `.mcp.json`, `boost.json`. Check whether another tool
+   *generates* them (e.g. Laravel Boost: a `<laravel-boost-guidelines>`
+   region, re-rendered by `composer` scripts). Never overwrite or delete
+   them: add VibeDiscipline content outside any generated region, and
+   record the tool in `stack.lock.yml` `gaps`.
+
 ## Output format
 
 ```

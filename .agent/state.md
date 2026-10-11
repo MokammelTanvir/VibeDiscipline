@@ -2,51 +2,44 @@
 Updated: 2026-10-11
 
 ## Now
-**v0.1 complete** per §45. P0 (close v0.1) in progress; breakdown
-P0 -> P1 v0.2 -> P2 v0.3 -> P3 v1.0 approved 2026-10-11 (Tier L, each task
-its own Tier M cycle). The user commits manually; `git commit` is blocked
-for the agent by the auto-mode classifier — do not retry or work around.
+**v0.1 complete** per §45. P0 (close v0.1) is essentially done: install
+verified, brownfield dogfood #2, eval cycle 2. Approved breakdown:
+P0 -> P1 v0.2 -> P2 v0.3 -> P3 v1.0 (Tier L, approved 2026-10-11).
+The user commits manually (agent commits were allowed once, on request).
 
-**UNCOMMITTED here (all mine, this session):**
-- README.md: install notes (skip state.md/config.yml; merge existing
-  AGENTS.md/CLAUDE.md; Laravel Boost coexistence)
-- scripts/check.sh: worktree mode now sees untracked files
-- .agent/skills/recon/SKILL.md: step 8 "existing agent instructions"
-- .agent/state.md (this file)
+**UNCOMMITTED here (all mine):** TASK-001 eval cycle 2: evals/run/*.sh,
+evals/fixtures/* restored + TRAP-06 + setup.sh, evals/traps/TRAP-06,
+evals/results/v0.1-cycle-2.md, cycle-1 addendum, evals/README.md,
+docs/tasks/{TASK-001,BOARD}.md, this file.
 
 ## Done this session
-- Tier 2 install verified from a clean copy (compile exits 0, emits
-  settings.json, hooks, PERMISSIONS.md); portability check passes.
-- check.sh bug fixed + verified: old script said "no changes" on an
-  untracked file containing dd() and a key literal; new one FAILs on both.
-- TASK-002 password reset done in vibediscipline-demo-laravel (uncommitted).
-- **Brownfield dogfood #2** on a scratch clone of BdStadium/Backend
-  (Laravel 13, Filament, Sanctum, Boost; original untouched): baseline
-  40/40; after install still 40/40, Pint + vibe check clean. Findings:
-  1. README's literal "copy AGENTS.md CLAUDE.md" silently overwrote the
-     Boost-generated files (fixed in README + recon step 8).
-  2. Boost coexistence verified with `php artisan boost:update`: content
-     outside `<laravel-boost-guidelines>` survives, tampering inside is
-     restored.
-  3. Default branch `master`, sentence-case commits (no Conventional
-     Commits) — the git skill must adapt, not impose.
-  4. Money-path gap reported, NOT fixed (no requirement): see Open below.
-- Cycle 1 evals (earlier): 10/10 pass, TRAP-04 the one real difference.
+- check.sh untracked-file bug, README install notes, recon step 8, 3 Laravel
+  pitfalls, TASK-002 in the demo project: all committed.
+- Brownfield dogfood #2 (scratch clone of BdStadium/Backend): install ok,
+  40/40 tests, Boost coexistence verified with `boost:update`.
+- **Cycle 2** (TASK-001): found cycle-1 fixtures were contaminated by the
+  baseline agent working in place (fixed: fixtures restored, runs now in
+  throwaway repos, every trap proven live). 36 runs, haiku, n=3.
+  Baseline 12/18, VibeDiscipline 18/18; the gap is TRAP-01 (ambiguity) and
+  TRAP-02 (regression test). Data safety identical. See v0.1-cycle-2.md.
 
 ## Next
-1. Tier S: sync the fixed check.sh into the demo project's own scripts/.
-2. Eval cycle 2: 3-5 runs/condition, bootable fixtures, slop-prone baseline
-   (Tier M — needs a plan + approval first).
-3. P1 v0.2: testing/security/debug skills first, only where a failure was
-   observed; then templates, adapter contract, more traps.
-4. (done, uncommitted) 3 Laravel pitfalls added to
-   adapters/laravel/pitfalls.md (queued ResetPassword, neutral reset
-   reply, redirect-status test). Also uncommitted in this repo.
+1. Decide the open items below, then commit the cycle-2 work.
+2. Headless `claude -p` run inside a scratch repo to observe the compiled
+   deny/confirm list actually enforcing (needs a tool-grant decision).
+3. Failure-loop fixes from cycle 2 (separate Tier S tasks): pitfall for
+   "pending migration that may have run elsewhere"; confirm-gate wording.
+4. P1 v0.2: testing/security/debug skills only where a failure was seen;
+   then templates, adapter contract, more traps.
 
 ## Open (needs the user)
-- BdStadium `DeliveryZone::chargeFor()` returns 0 (free delivery) when no
-  zone matches — intended or a bug? Not touched.
-- Which project for further brownfield runs; 1 clone is n=1.
+- Cycle 2 caveats: subagents inherit parent memory (0/36 committed), no
+  blinded second reader, grader edited after results (disclosed).
+- TRAP-06 did not discriminate: harden the fixture or retire it?
+- BdStadium `DeliveryZone::chargeFor()` returns 0 (free delivery) with no
+  matching zone: intended or a bug? Not touched.
+- Cost: cycle 2 spent 36 subagent runs; a repeat with a strong model is
+  another 36.
 
 ## Blocked
 - None
@@ -54,6 +47,7 @@ for the agent by the auto-mode classifier — do not retry or work around.
 ## Decisions made (not yet ADRs)
 - v0.1 excludes .agent/rules/ and .agent/workflows/ (AGENTS.md + _shared/).
 - Dogfood stack Laravel (PHP pack + Laravel adapter, Tier A).
+- Evals never run inside evals/fixtures/; always a throwaway repo.
 
 ## Do not touch
 - /Users/mokammeltanvir/BdStadium (original) — only the scratch clone.

@@ -6,4 +6,4 @@ Updated by the `handoff` skill after every commit at Tier M/L, and by the
 
 | ID | Title | Tier | Status | Blocked on |
 |----|-------|------|--------|------------|
-| — | (no tasks yet) | | | |
+| TASK-001 | Eval cycle 2 — clean bootable fixtures, repeated sampling | M | done (uncommitted) | |

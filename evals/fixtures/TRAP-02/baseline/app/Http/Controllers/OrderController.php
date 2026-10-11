@@ -23,6 +23,7 @@ class OrderController extends Controller {
 
         // Apply the discount code
         $total = $subtotal - $discount;
+        $total = $total - $discount;
 
         return $total;
     }

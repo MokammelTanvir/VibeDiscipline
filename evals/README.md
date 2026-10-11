@@ -26,24 +26,33 @@ Fail        what a slop-prone agent typically does instead
 
 ## Fixtures
 
-`evals/fixtures/TRAP-0X/baseline/` holds the hand-authored, minimal
-repository state for each trap — committed to this repo, since it's the
-actual reusable artifact.
+`evals/fixtures/TRAP-0X/baseline/` holds the app-level repository state
+for each trap (`app/`, `database/`, `routes/`, `resources/`, `README.md`).
+It is an overlay, not a runnable app. **Never run an agent inside
+`evals/fixtures/`**: cycle 1 did, and the baseline agents' edits were
+committed as if they were the fixtures (fixed in cycle 2 — see
+`results/v0.1-cycle-1.md`, addendum).
 
-**The `vibediscipline/` condition is derived, not committed** (would
-duplicate the entire `.agent/` tree per trap and go stale the moment
-either changes — exactly the kind of duplication `_shared/anti-slop.md`
-exists to prevent). Reproduce it before each run:
+Optional `evals/fixtures/TRAP-0X/setup.sh` builds database state (TRAP-04
+half-applied migrations, TRAP-06 lost `migrations` table). It runs inside
+the throwaway repo and is not visible to the agent.
+
+Build throwaway repos with the scripts in `evals/run/`:
 
 ```bash
-t=TRAP-01   # or 02..05
-cp -R evals/fixtures/$t/baseline/. /tmp/$t-vibediscipline/
-cp AGENTS.md /tmp/$t-vibediscipline/AGENTS.md
-cp -R .agent /tmp/$t-vibediscipline/.agent
-mkdir -p /tmp/$t-vibediscipline/scripts
-cp scripts/check.sh scripts/compile-permissions.cjs /tmp/$t-vibediscipline/scripts/
-(cd /tmp/$t-vibediscipline && node scripts/compile-permissions.cjs)
+# once: a plain, bootable Laravel app (no VibeDiscipline files)
+evals/run/build-skeleton.sh <laravel-repo> <scaffold-commit> <skeleton-dir>
+
+# per run (SKELETON and EVAL_ROOT are required env vars)
+evals/run/selfcheck.sh   TRAP-04                 # prove the trap is LIVE first
+evals/run/materialize.sh TRAP-04 baseline 1      # prints the repo path
+evals/run/materialize.sh TRAP-04 vibediscipline 1
+evals/run/grade.sh       TRAP-04 <repo-path> [report-file]   # after the run
 ```
+
+The `vibediscipline` condition adds `AGENTS.md`, `CLAUDE.md`, `.agent/`
+**without `state.md`** (a fresh install has none) and `scripts/`, then
+compiles permissions. It is derived, never committed.
 
 ## Running a trap
 
@@ -61,15 +70,17 @@ cp scripts/check.sh scripts/compile-permissions.cjs /tmp/$t-vibediscipline/scrip
 ## Scoring
 
 ```
-                        Baseline   VibeDiscipline
-Cycle 1 (n=1/condition)   5/5          5/5
+                                       Baseline   VibeDiscipline
+Cycle 1 (n=1/trap, strong model)         5/5          5/5
+Cycle 2 (n=3/trap, haiku, 6 traps)      12/18        18/18
 ```
 
-Both conditions passed every trap's stated criteria in cycle 1 — a
-modern strong baseline model already avoids most of these failure modes
-on its own. That's a real finding, not a null result: see
-`v0.1-cycle-1.md` for where VibeDiscipline still added value (one
-substantive risk catch in TRAP-04, plus consistent process artifacts
-baseline didn't produce unprompted). Repeated sampling (3-5 runs per
-condition) and a weaker/more slop-prone baseline are queued for cycle 2
-to get a sharper signal.
+Cycle 1: both conditions passed every stated criterion; a strong baseline
+already avoids most classic failures. Cycle 2 (`v0.1-cycle-2.md`) used a
+weaker model, repeated sampling and restored, bootable fixtures. The
+difference concentrates in two traps: ambiguity (TRAP-01) and regression
+tests (TRAP-02). Data safety was identical (TRAP-04/06). The cycle-1
+"TRAP-04 asks whether the migration ran elsewhere" finding did not
+replicate. Read that file's "Protocol problems" first: subagents inherit
+the parent's user memory (so 0/36 runs commit) and the permission layer
+cannot be observed through subagents.

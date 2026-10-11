@@ -32,8 +32,25 @@ npx degit <org>/vibediscipline/.agent/skills .agent/skills
 # Skills + enforced permissions + AGENTS.md (recommended for most projects)
 npx vibe init --tier governed     # ships in v0.3; for now, copy manually:
 #   .agent/  AGENTS.md  CLAUDE.md  scripts/
+#   but do NOT carry over this repo's own project state:
+#     .agent/state.md  (start from an empty one)
+#     .agent/config.yml  (edit the `stack:` block for your project)
+#   and do NOT overwrite an AGENTS.md / CLAUDE.md you already have
+#     (see "Already have an AGENTS.md?" below)
 #   then run: node scripts/compile-permissions.cjs
 ```
+
+### Already have an AGENTS.md or CLAUDE.md?
+
+Merge, never overwrite — copying over them silently deletes your existing
+instructions. Put VibeDiscipline's `AGENTS.md` content **above** the existing
+content in the same file.
+
+Laravel Boost projects: Boost generates those files and re-renders the region
+between its `<laravel-boost-guidelines>` tags (composer's `post-update-cmd`
+runs `boost:update`). Content placed outside that region survives
+`php artisan boost:update` — verified on a Laravel 13 + Boost project: a line
+tampered inside the region was restored, VibeDiscipline's text above it was kept.
 
 ## What's in v0.1
 

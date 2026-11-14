@@ -213,10 +213,10 @@ fi
 
 # ── debug leftovers ──────────────────────────────────────────────────
 # dd()/dump()/var_dump()/debugger/binding.pry are never legitimate in
-# committed code. console.log is excluded for scripts/** and bin/**,
-# where intentional CLI stdout output is expected.
+# committed code. console.log is excluded for scripts/**, bin/** and shell
+# scripts (an embedded `node -e`), where stdout output is intentional.
 STRICT_PATTERN='\bdd\(|\bdump\(|var_dump\(|debugger;|binding\.pry'
-NON_CLI_FILES=$(echo "$CODE_FILES" | grep -Ev '(^|/)(scripts|bin)/' || true)
+NON_CLI_FILES=$(echo "$CODE_FILES" | grep -Ev '(^|/)(scripts|bin)/|\.sh$' || true)
 
 STRICT_HITS=$(diff_for "$CODE_FILES" | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -E "$STRICT_PATTERN" || true)
 CONSOLE_HITS=$(diff_for "$NON_CLI_FILES" | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -E 'console\.log\(' || true)

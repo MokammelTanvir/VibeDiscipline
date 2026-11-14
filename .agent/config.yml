@@ -33,4 +33,4 @@ git:
 check:
   fail_on: [scope, leftovers, secrets, dependency]
   warn_on: [tests, duplication, docs, size]
-  ignore: []
+  ignore: ["evals/fixtures/**"]   # trap fixtures are test data, not this project's code

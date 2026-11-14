@@ -15,16 +15,18 @@ Shipped:
 - PHP ecosystem pack and a Tier-A Laravel adapter
 - `scripts/check.sh` (vibe check): scope, secrets, leftovers, dependency,
   tests, methodology
-- 6 trap tasks run in 2 cycles (see `evals/results/`), plus TRAP-07 as a spec
+- 7 trap tasks run (see `evals/results/`), and a headless runner
+  (`evals/run/headless.sh`)
 - Methodology selection: agile, waterfall or hybrid
+- `scripts/install.sh` for existing projects
 
 Not in v0.1: PRD/TRD/ADR templates, the UI/UX skill, more adapters, the
 `vibe` CLI, the template-repo bootstrap.
 
 ## v0.2 — Broaden
 
-- An install script, then Claude Code native packaging (skills bridge,
-  plugin manifest, a hook for confirm-tier commands)
+- Claude Code native packaging (skills bridge, plugin manifest, a hook
+  for confirm-tier commands)
 - Skills: testing, security, debug, database, refactor, dependency,
   discovery, product, architecture, ui-ux
 - Document templates: PRD, TRD, ADR, API-SPEC, UI-UX

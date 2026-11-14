@@ -8,7 +8,7 @@ Do not duplicate its content here; edit AGENTS.md instead.
 
 Live state: `.agent/state.md` · tasks: `docs/tasks/BOARD.md` · full design:
 `VibeDiscipline-Full-Plan.md` (gitignored, §45 roadmap, §45A readiness).
-Overall ≈ 32% of v1.0. Repo is already PUBLIC; CI green; no tag or release.
+Overall ≈ 32% of v1.0. Repo is PUBLIC; tagged v0.1.0 on 2026-11-15; no GitHub release yet.
 
 ## Done
 - v0.1 core: AGENTS.md (72 lines), 6 skills (recon, planning, implement,
@@ -17,25 +17,25 @@ Overall ≈ 32% of v1.0. Repo is already PUBLIC; CI green; no tag or release.
 - `scripts/check.sh` (secrets, leftovers, dependency, tests, methodology).
 - Evals: 6 traps, 2 cycles, 36 scored runs (baseline 12/18 vs VD 18/18, n=3, haiku).
 - TASK-001, TASK-002 done and committed.
-- Steps 1-7 of list A, done 2026-11-15 (steps 2-7 uncommitted until the
-  owner reviews): public `docs/ROADMAP.md` replaces the dead plan links;
+- Steps 1-7 of list A, done 2026-11-15: public `docs/ROADMAP.md` replaces the dead plan links;
   `<org>` filled in and the degit command verified; dead `.agent/rules/`
   line removed; check.sh has `scope`, `--task` and honours `check.*`;
   the compiler handles `mode`, `files.allow`, file-deny edits and
   `network` (advisory); `workflow.*` flags defined in config-resolution.md;
   headless enforcement run recorded in `evals/results/enforcement-2026-11-15.md`.
-- CHANGELOG.md written (0.1.0, unreleased).
+- CHANGELOG.md written; `v0.1.0` tagged and pushed.
+- Step 8: TRAP-07 run headless, 18 runs (`evals/results/trap-07-2026-11-15.md`);
+  `evals/run/headless.sh` is the first automated runner.
+- Step 10 (TASK-003): `scripts/install.sh`.
 
 ## A — Publishable v0.1.0 (what is left)
-8. Decide TRAP-06 (harden or retire); run TRAP-07 (needs a fixture and
-   about 9 agent runs).
-9. Push, tag `v0.1.0`, GitHub pre-release, repo topics (owner confirms each).
+8. Decide TRAP-06 (harden or retire). Decide for hybrid Tier L whether the
+   document set is written or only proposed before approval (TRAP-07 finding).
+9. GitHub pre-release for `v0.1.0`, repo topics (owner confirms each).
 Note: `.agent/stack.lock.yml` is deliberately absent here; a template repo
 must not ship its own detected stack. `recon` writes it per project.
 
 ## B — v0.2 Broaden (the bulk)
-10. Install script (stopgap for the CLI): copy, merge AGENTS.md, empty
-    state.md, compile. Manual copy is today's biggest adoption blocker.
 11. Claude Code native packaging: bridge `.agent/skills` → `.claude/skills`,
     plugin manifest, PreToolUse hook for confirm-tier commands (reasoning
     alone failed the confirm gate in 4 eval runs).

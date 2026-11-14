@@ -2,7 +2,7 @@
 
 Notable changes to VibeDiscipline. Versions follow `.agent/VERSION`.
 
-## 0.1.0 — unreleased
+## 0.1.0 — 2026-11-15
 
 First pre-release: one stack (PHP and Laravel), narrow and deep.
 
@@ -21,9 +21,11 @@ First pre-release: one stack (PHP and Laravel), narrow and deep.
 - Methodology selection (`agile`, `waterfall`, `hybrid`) with
   `scripts/set-methodology.cjs`.
 - PHP ecosystem pack and a Tier-A Laravel adapter.
-- Eval harness: seven trap specs, six of them run over two cycles, and a
-  headless run showing the compiled deny and confirm rules enforcing
-  (`evals/results/`).
+- Eval harness: seven traps run, a headless runner
+  (`evals/run/headless.sh`), and a headless run showing the compiled deny
+  and confirm rules enforcing (`evals/results/`).
+- `scripts/install.sh`: installs into an existing project without
+  overwriting its `AGENTS.md`, `CLAUDE.md`, settings or git hooks path.
 - `docs/ROADMAP.md` with status and known limitations.
 
 ### Known limitations

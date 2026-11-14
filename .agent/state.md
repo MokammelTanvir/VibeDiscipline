@@ -1,53 +1,47 @@
 # Working State
-Updated: 2026-10-11
+Updated: 2026-11-15
 
 ## Now
-**v0.1 complete** per §45. P0 (close v0.1) is essentially done: install
-verified, brownfield dogfood #2, eval cycle 2. Approved breakdown:
-P0 -> P1 v0.2 -> P2 v0.3 -> P3 v1.0 (Tier L, approved 2026-10-11).
-The user commits manually (agent commits were allowed once, on request).
-
-**UNCOMMITTED here (all mine):** TASK-001 eval cycle 2: evals/run/*.sh,
-evals/fixtures/* restored + TRAP-06 + setup.sh, evals/traps/TRAP-06,
-evals/results/v0.1-cycle-2.md, cycle-1 addendum, evals/README.md,
-docs/tasks/{TASK-001,BOARD}.md, this file.
+Methodology: hybrid
+v0.1 complete; **TASK-002 methodology selection done, UNCOMMITTED** (all mine):
+.agent/config.yml, _shared/{methodology (new),ceremony-tiers,config-resolution}.md,
+planning + handoff SKILL.md, AGENTS.md, README.md, skills/README.md,
+docs/README.md, docs/tasks/{TASK-002 (new),BOARD}.md, scripts/set-methodology.cjs
+(new), scripts/check.sh, evals/traps/TRAP-07 (new, spec only), this file.
+The user commits manually; always ask before commit or push.
+Roadmap: P0 close v0.1 -> P1 v0.2 -> P2 v0.3 -> P3 v1.0 (Tier L, approved 2026-10-11).
 
 ## Done this session
-- check.sh untracked-file bug, README install notes, recon step 8, 3 Laravel
-  pitfalls, TASK-002 in the demo project: all committed.
-- Brownfield dogfood #2 (scratch clone of BdStadium/Backend): install ok,
-  40/40 tests, Boost coexistence verified with `boost:update`.
-- **Cycle 2** (TASK-001): found cycle-1 fixtures were contaminated by the
-  baseline agent working in place (fixed: fixtures restored, runs now in
-  throwaway repos, every trap proven live). 36 runs, haiku, n=3.
-  Baseline 12/18, VibeDiscipline 18/18; the gap is TRAP-01 (ambiguity) and
-  TRAP-02 (regression test). Data safety identical. See v0.1-cycle-2.md.
+- v1.0 readiness audit: ~30% overall, ~70% remains. Full table in the plan
+  (VibeDiscipline-Full-Plan.md §45A, gitignored). Plan updated to v2.1 (§12A).
+- Methodology verified in a scratch repo (selector: unset/block/no-block/
+  bad value/no tty/pty menu; check.sh: 7 cases). Gates pass: portability,
+  line limits, compile idempotent, vibe check clean.
 
-## Next
-1. Re-test the corrected confirm-gate wording (TRAP-06 VD, n=3); commit pending.
-2. Headless `claude -p` run inside a scratch repo to observe the compiled
-   deny/confirm list actually enforcing (needs a tool-grant decision).
-3. Failure-loop fixes done (uncommitted): implement "Before running a command",
-   pitfall "pending migration may have run elsewhere"; see results addendum.
-4. P1 v0.2: testing/security/debug skills only where a failure was seen;
-   then templates, adapter contract, more traps.
+## Next (critical path to a publishable v0.1.0, plan §45A "A")
+Full A-to-Z list (22 steps, re-audited 2026-11-15): CLAUDE.md maintainer section.
+1. Plan is gitignored but README links to it: publish it or strip the links.
+2. Replace `<org>` with MokammelTanvir in README.md:30, skills/README.md:9.
+3. Tag v0.1.0 + CHANGELOG. 4. Add a `scope` check; make check.sh honour check.*.
+5. Headless `claude -p` run to see deny/confirm enforce, or say "not yet observed".
+6. Run TRAP-07 (needs a fixture; ~3 runs x 3 methodologies).
 
 ## Open (needs the user)
-- Cycle 2 caveats: subagents inherit parent memory (0/36 committed), no
-  blinded second reader, grader edited after results (disclosed).
+- Methodology default: assumed hybrid when unset, no forced prompt (TASK-002 Q1).
 - TRAP-06 did not discriminate: harden the fixture or retire it?
-- BdStadium `DeliveryZone::chargeFor()` returns 0 (free delivery) with no
-  matching zone: intended or a bug? Not touched.
-- Cost: cycle 2 spent 36 subagent runs; a repeat with a strong model is
-  another 36.
+- Corrected confirm-gate wording (TRAP-06 VD, n=3) not re-tested.
+- Eval caveats: n=3, haiku only, same author grades and judges.
+- BdStadium `DeliveryZone::chargeFor()` returns 0 with no matching zone:
+  intended or a bug? Not touched.
 
 ## Blocked
 - None
 
 ## Decisions made (not yet ADRs)
-- v0.1 excludes .agent/rules/ and .agent/workflows/ (AGENTS.md + _shared/).
+- v0.1 excludes .agent/rules/ and .agent/workflows/.
 - Dogfood stack Laravel (PHP pack + Laravel adapter, Tier A).
 - Evals never run inside evals/fixtures/; always a throwaway repo.
+- Methodology = sequencing + gate placement, never the tier (TASK-002).
 
 ## Do not touch
 - /Users/mokammeltanvir/BdStadium (original) — only the scratch clone.

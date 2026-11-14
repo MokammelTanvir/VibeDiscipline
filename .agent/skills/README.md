@@ -23,6 +23,7 @@ _shared/
 
 recon/SKILL.md           understand an existing codebase before touching it
 planning/SKILL.md        turn a requirement into a tiered plan + acceptance criteria
+planning/templates/      PRD, TRD and ADR templates (Tier L only)
 implement/SKILL.md       the coding discipline: inspect → plan → implement → verify
 code-review/SKILL.md     self-review before anything is considered done
 git/SKILL.md             professional git behavior: diff review, atomic commits

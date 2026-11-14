@@ -46,9 +46,8 @@ Tier L and in how change is handled.
 ## Phase and approval markers (waterfall)
 
 PRD and TRD carry the same frontmatter as a task doc: `approved_by` and
-`approved_at`. Empty or missing means the phase gate is not passed. Until the
-PRD/TRD templates ship (v0.2), use the shortest document that names its
-consumer. Where the docs tree exists the paths are `docs/product/PRD.md` and
+`approved_at`. Empty or missing means the phase gate is not passed. Start
+from `planning/templates/PRD.md` and `TRD.md`. Where the docs tree exists the paths are `docs/product/PRD.md` and
 `docs/technical/TRD.md`; if it does not exist, hold the phase gate in the
 conversation instead of creating a docs tree uninvited.
 

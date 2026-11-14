@@ -20,5 +20,5 @@ Under `waterfall` the PRD and TRD are phase gates: each needs `approved_by`
 and `approved_at` before implementation (see
 `.agent/skills/_shared/methodology.md`).
 
-PRD/TRD/ADR templates ship in v0.2 (see [`ROADMAP.md`](./ROADMAP.md)) — v0.1 covers Tier M work via
-the task doc template in `.agent/skills/planning/SKILL.md`.
+PRD, TRD and ADR templates are in `.agent/skills/planning/templates/`;
+the task doc template is in `.agent/skills/planning/SKILL.md`.

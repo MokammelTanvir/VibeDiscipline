@@ -54,6 +54,14 @@ loads: [_shared/ceremony-tiers.md, _shared/methodology.md, _shared/config-resolu
    Low-impact assumptions are stated and work continues. High-impact
    assumptions block on an answer.
 
+## Tier L documents
+
+Templates sit beside this file: `templates/PRD.md`, `templates/TRD.md`,
+`templates/ADR.md`. Copy one, fill it, delete sections that do not apply.
+Which of them are written, and when approval is asked, comes from
+`_shared/methodology.md`. A PRD's Open Questions is never empty on a first
+draft. Below Tier L, write none of them.
+
 ## Task doc template
 
 ```markdown

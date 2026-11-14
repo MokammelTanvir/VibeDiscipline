@@ -7,4 +7,5 @@ Updated by the `handoff` skill after every commit at Tier M/L, and by the
 | ID | Title | Tier | Status | Blocked on |
 |----|-------|------|--------|------------|
 | TASK-001 | Eval cycle 2 — clean bootable fixtures, repeated sampling | M | done | |
-| TASK-002 | Methodology selection (agile / waterfall / hybrid) | M | done | trap spec TRAP-07 not yet run |
+| TASK-002 | Methodology selection (agile / waterfall / hybrid) | M | done | |
+| TASK-003 | Install script (stopgap for `vibe init`) | M | done | |

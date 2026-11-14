@@ -33,24 +33,23 @@ Roadmap, current status and known limitations:
 npx degit MokammelTanvir/VibeDiscipline/.agent/skills .agent/skills
 
 # Skills + enforced permissions + AGENTS.md (recommended for most projects)
-npx vibe init --tier governed     # ships in v0.3; for now, copy manually:
-#   .agent/  AGENTS.md  CLAUDE.md  scripts/
-#   but do NOT carry over this repo's own project state:
-#     .agent/state.md  (start from an empty one)
-#     .agent/config.yml  (edit the `stack:` block for your project)
-#     CLAUDE.md          (keep its first two lines; the rest is this repo's status)
-#   and do NOT overwrite an AGENTS.md / CLAUDE.md you already have
-#     (see "Already have an AGENTS.md?" below)
-#   then run: node scripts/compile-permissions.cjs
-#   then open the project in Claude Code once and accept the trust dialog;
-#   until a workspace is trusted, Claude Code ignores the compiled allow-list
+git clone https://github.com/MokammelTanvir/VibeDiscipline.git
+VibeDiscipline/scripts/install.sh /path/to/your/project
+#   --methodology agile|waterfall|hybrid   --skills-only   --dry-run   --force
 ```
+
+The installer never copies this repo's own `state.md` or stack settings,
+keeps every file you already have, and compiles the permissions. Then open
+the project in Claude Code once and accept the trust dialog: until a
+workspace is trusted, Claude Code ignores the compiled allow-list. A `vibe`
+CLI replaces this script in v0.3.
 
 ### Already have an AGENTS.md or CLAUDE.md?
 
-Merge, never overwrite — copying over them silently deletes your existing
-instructions. Put VibeDiscipline's `AGENTS.md` content **above** the existing
-content in the same file.
+They are kept. The installer puts VibeDiscipline's `AGENTS.md` content
+**above** yours in the same file, adds one pointer line to `CLAUDE.md`, and
+leaves an existing `.claude/settings.json` permissions block and
+`core.hooksPath` alone. If you copy by hand: merge, never overwrite.
 
 Laravel Boost projects: Boost generates those files and re-renders the region
 between its `<laravel-boost-guidelines>` tags (composer's `post-update-cmd`
@@ -85,6 +84,7 @@ AGENTS.md                    the constitution (≤100 lines)
 .agent/ecosystems/php/        PHP/Composer-level knowledge
 .agent/adapters/laravel/      Laravel conventions + AI-specific pitfalls (Tier A)
 scripts/check.sh              vibe check — scope, secrets, leftovers, dependency, tests
+scripts/install.sh            install into an existing project
 scripts/set-methodology.cjs   select agile | waterfall | hybrid
 scripts/compile-permissions.cjs
 scripts/validate-portability.sh

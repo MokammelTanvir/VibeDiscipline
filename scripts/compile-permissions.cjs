@@ -320,13 +320,24 @@ sees a branch name — so it applies equally to both; an agent's own
   return target;
 }
 
+// Returns "set", "kept:<path>" when the project already points its hooks
+// somewhere else (husky, lefthook: never taken over), or "failed".
 function activateHooksPath() {
+  const { execSync } = require("child_process");
+  let current = "";
   try {
-    const { execSync } = require("child_process");
-    execSync("git config core.hooksPath .githooks", { cwd: ROOT });
-    return true;
+    current = execSync("git config --get core.hooksPath", { cwd: ROOT, stdio: ["ignore", "pipe", "ignore"] })
+      .toString()
+      .trim();
   } catch {
-    return false;
+    current = ""; // unset, or not a git repository
+  }
+  if (current && current !== ".githooks") return `kept:${current}`;
+  try {
+    execSync("git config core.hooksPath .githooks", { cwd: ROOT, stdio: "ignore" });
+    return "set";
+  } catch {
+    return "failed";
   }
 }
 
@@ -354,11 +365,14 @@ function main() {
   console.log(`  ${path.relative(ROOT, hooksDir)}/pre-commit`);
   console.log(`  ${path.relative(ROOT, hooksDir)}/pre-push`);
   console.log(`  ${path.relative(ROOT, docsPath)}`);
-  console.log(
-    hooksActivated
-      ? "[vibe] git core.hooksPath set to .githooks"
-      : "[vibe] could not set git core.hooksPath automatically — run: git config core.hooksPath .githooks"
-  );
+  if (hooksActivated === "set") {
+    console.log("[vibe] git core.hooksPath set to .githooks");
+  } else if (hooksActivated.startsWith("kept:")) {
+    console.log(`[vibe] core.hooksPath is already '${hooksActivated.slice(5)}' — left alone.`);
+    console.log("[vibe] call .githooks/pre-commit and .githooks/pre-push from your own hooks to use them.");
+  } else {
+    console.log("[vibe] could not set git core.hooksPath automatically — run: git config core.hooksPath .githooks");
+  }
 }
 
 main();

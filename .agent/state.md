@@ -3,28 +3,29 @@ Updated: 2026-11-15
 
 ## Now
 Methodology: hybrid
-v0.1 complete; **TASK-002 methodology selection done, UNCOMMITTED** (all mine):
-.agent/config.yml, _shared/{methodology (new),ceremony-tiers,config-resolution}.md,
-planning + handoff SKILL.md, AGENTS.md, README.md, skills/README.md,
-docs/README.md, docs/tasks/{TASK-002 (new),BOARD}.md, scripts/set-methodology.cjs
-(new), scripts/check.sh, evals/traps/TRAP-07 (new, spec only), this file.
-The user commits manually; always ask before commit or push.
-Roadmap: P0 close v0.1 -> P1 v0.2 -> P2 v0.3 -> P3 v1.0 (Tier L, approved 2026-10-11).
+v0.1.0 release prep. TASK-002 committed (3489369). UNCOMMITTED (all mine,
+this session, list A steps 2-7): AGENTS.md, README.md, CHANGELOG.md (new),
+CLAUDE.md, docs/{ROADMAP (new),README,PERMISSIONS}.md, .agent/{config,permissions}.yml,
+.agent/skills/{README,_shared/config-resolution}.md, .claude/settings.json,
+scripts/{check.sh,compile-permissions.cjs}, evals/README.md,
+evals/results/enforcement-2026-11-15.md (new), this file.
+The user commits manually; always ask before commit or push. No co-author trailer.
 
 ## Done this session
-- v1.0 readiness audit: ~30% overall, ~70% remains. Full table in the plan
-  (VibeDiscipline-Full-Plan.md §45A, gitignored). Plan updated to v2.1 (§12A).
-- Methodology verified in a scratch repo (selector: unset/block/no-block/
-  bad value/no tty/pty menu; check.sh: 7 cases). Gates pass: portability,
-  line limits, compile idempotent, vibe check clean.
+- check.sh: `scope` check (task doc Affected Areas), `--task`, and
+  `check.fail_on/warn_on/ignore` honoured. 10 scratch-repo scenarios pass.
+- Compiler: `mode` (auto/guided/strict), `files.allow`, Edit-deny for denied
+  files, `network` documented as advisory, inline YAML lists, `--help`.
+- Headless `claude -p` run: deny, confirm and file-deny all blocked. Finding:
+  the allow-list is ignored until the workspace trust dialog is accepted.
+- Dead plan links replaced by docs/ROADMAP.md; degit command verified.
 
-## Next (critical path to a publishable v0.1.0, plan §45A "A")
-Full A-to-Z list (22 steps, re-audited 2026-11-15): CLAUDE.md maintainer section.
-1. Plan is gitignored but README links to it: publish it or strip the links.
-2. Replace `<org>` with MokammelTanvir in README.md:30, skills/README.md:9.
-3. Tag v0.1.0 + CHANGELOG. 4. Add a `scope` check; make check.sh honour check.*.
-5. Headless `claude -p` run to see deny/confirm enforce, or say "not yet observed".
-6. Run TRAP-07 (needs a fixture; ~3 runs x 3 methodologies).
+## Next
+Full list: CLAUDE.md maintainer section (model per step is there too).
+1. Owner reviews and commits the uncommitted work above.
+2. Push, tag v0.1.0, GitHub pre-release, topics (each needs confirmation).
+3. TRAP-07 fixture + runs; TRAP-06 decision.
+4. v0.2 starts with the install script and Claude Code native packaging.
 
 ## Open (needs the user)
 - Methodology default: assumed hybrid when unset, no forced prompt (TASK-002 Q1).
@@ -42,6 +43,9 @@ Full A-to-Z list (22 steps, re-audited 2026-11-15): CLAUDE.md maintainer section
 - Dogfood stack Laravel (PHP pack + Laravel adapter, Tier A).
 - Evals never run inside evals/fixtures/; always a throwaway repo.
 - Methodology = sequencing + gate placement, never the tier (TASK-002).
+- Permission mode lives only in permissions.yml; removed from config.yml.
+- `require_git_diff_review` removed: a non-negotiable cannot be a flag.
+- Public roadmap is docs/ROADMAP.md; the full plan stays gitignored.
 
 ## Do not touch
 - /Users/mokammeltanvir/BdStadium (original) — only the scratch clone.

@@ -8,7 +8,7 @@ Do not duplicate its content here; edit AGENTS.md instead.
 
 Live state: `.agent/state.md` · tasks: `docs/tasks/BOARD.md` · full design:
 `VibeDiscipline-Full-Plan.md` (gitignored, §45 roadmap, §45A readiness).
-Overall ≈ 30% of v1.0. Repo is already PUBLIC; CI green; no tag or release.
+Overall ≈ 32% of v1.0. Repo is already PUBLIC; CI green; no tag or release.
 
 ## Done
 - v0.1 core: AGENTS.md (72 lines), 6 skills (recon, planning, implement,
@@ -16,24 +16,22 @@ Overall ≈ 30% of v1.0. Repo is already PUBLIC; CI green; no tag or release.
 - `permissions.yml` → `.claude/settings.json` + git hooks + CI (idempotent).
 - `scripts/check.sh` (secrets, leftovers, dependency, tests, methodology).
 - Evals: 6 traps, 2 cycles, 36 scored runs (baseline 12/18 vs VD 18/18, n=3, haiku).
-- TASK-001 done. TASK-002 methodology selection done but UNCOMMITTED (16 files).
+- TASK-001, TASK-002 done and committed.
+- Steps 1-7 of list A, done 2026-11-15 (steps 2-7 uncommitted until the
+  owner reviews): public `docs/ROADMAP.md` replaces the dead plan links;
+  `<org>` filled in and the degit command verified; dead `.agent/rules/`
+  line removed; check.sh has `scope`, `--task` and honours `check.*`;
+  the compiler handles `mode`, `files.allow`, file-deny edits and
+  `network` (advisory); `workflow.*` flags defined in config-resolution.md;
+  headless enforcement run recorded in `evals/results/enforcement-2026-11-15.md`.
+- CHANGELOG.md written (0.1.0, unreleased).
 
-## A — Publishable v0.1.0 (do first, in this order)
-1. Commit TASK-002 (ask first; no AI co-author trailer).
-2. Dead links, live on GitHub now: README.md:13, docs/README.md:22,
-   evals/README.md:5 point at the gitignored plan. Add a public
-   `docs/ROADMAP.md` and relink, or strip.
-3. `<org>` → `MokammelTanvir` (README.md:30, .agent/skills/README.md:9);
-   then actually run the degit command in a scratch dir.
-4. AGENTS.md names `.agent/rules/` (does not exist) and `stack.lock.yml`
-   (never generated here): remove the first, run `recon` for the second.
-5. check.sh: add the `scope` check; honour `check.fail_on/warn_on/ignore`.
-6. Wire or delete dead config: `mode`, `workflow.require_*`,
-   `permissions.network`, `files.allow`.
-7. One headless `claude -p` run proving deny/confirm really block; otherwise
-   README must say "compiled, not yet observed enforcing".
-8. Decide TRAP-06 (harden or retire); run TRAP-07 (needs a fixture).
-9. CHANGELOG.md, tag `v0.1.0`, GitHub pre-release, repo topics.
+## A — Publishable v0.1.0 (what is left)
+8. Decide TRAP-06 (harden or retire); run TRAP-07 (needs a fixture and
+   about 9 agent runs).
+9. Push, tag `v0.1.0`, GitHub pre-release, repo topics (owner confirms each).
+Note: `.agent/stack.lock.yml` is deliberately absent here; a template repo
+must not ship its own detected stack. `recon` writes it per project.
 
 ## B — v0.2 Broaden (the bulk)
 10. Install script (stopgap for the CLI): copy, merge AGENTS.md, empty

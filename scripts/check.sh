@@ -212,15 +212,23 @@ else
 fi
 
 # ── debug leftovers ──────────────────────────────────────────────────
-# dd()/dump()/var_dump()/debugger/binding.pry are never legitimate in
-# committed code. console.log is excluded for scripts/**, bin/** and shell
-# scripts (an embedded `node -e`), where stdout output is intentional.
-STRICT_PATTERN='\bdd\(|\bdump\(|var_dump\(|debugger;|binding\.pry'
-NON_CLI_FILES=$(echo "$CODE_FILES" | grep -Ev '(^|/)(scripts|bin)/|\.sh$' || true)
-
-STRICT_HITS=$(diff_for "$CODE_FILES" | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -E "$STRICT_PATTERN" || true)
-CONSOLE_HITS=$(diff_for "$NON_CLI_FILES" | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -E 'console\.log\(' || true)
-LEFTOVER_HITS="${STRICT_HITS}${STRICT_HITS:+$'\n'}${CONSOLE_HITS}"
+# Each pattern is only looked for in files of its own language: `dd(` in a
+# shell script or a test fixture string is not a PHP debug call.
+# console.log is also skipped under scripts/** and bin/**, where stdout
+# output is the point.
+added_in() { # $1 file-extension regex, $2 pattern, $3 optional path regex to exclude
+  local files
+  files=$(echo "$CODE_FILES" | grep -E "\\.($1)\$" || true)
+  [ -n "${3:-}" ] && files=$(echo "$files" | grep -Ev "$3" || true)
+  diff_for "$files" | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -E "$2" || true
+}
+LEFTOVER_HITS=$(
+  added_in 'php' '\bdd\(|\bdump\(|var_dump\('
+  added_in 'js|jsx|ts|tsx|mjs|cjs|vue|svelte' 'debugger;'
+  added_in 'js|jsx|ts|tsx|mjs|cjs|vue|svelte' 'console\.log\(' '(^|/)(scripts|bin)/'
+  added_in 'rb|erb|rake' 'binding\.pry'
+  added_in 'py' '\bbreakpoint\(\)|pdb\.set_trace\('
+)
 
 if [ -n "${LEFTOVER_HITS// /}" ]; then
   finding leftovers FAIL "debug statement(s) added:"

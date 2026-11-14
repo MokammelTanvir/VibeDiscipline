@@ -20,7 +20,13 @@
       "Bash(npm run lint*)",
       "Bash(npm run build*)",
       "Bash(pnpm test*)",
-      "Bash(pnpm lint*)"
+      "Bash(pnpm lint*)",
+      "Edit(app/**)",
+      "Edit(resources/**)",
+      "Edit(routes/**)",
+      "Edit(tests/**)",
+      "Edit(docs/**)",
+      "Edit(database/factories/**)"
     ],
     "ask": [
       "Bash(composer require *)",
@@ -66,12 +72,19 @@
       "Bash(chmod 777*)",
       "Bash(*--no-verify*)",
       "Read(.git/**)",
+      "Edit(.git/**)",
       "Read(**/*.pem)",
+      "Edit(**/*.pem)",
       "Read(**/*.key)",
+      "Edit(**/*.key)",
       "Read(**/*.p12)",
+      "Edit(**/*.p12)",
       "Read(**/id_rsa*)",
+      "Edit(**/id_rsa*)",
       "Read(**/.ssh/**)",
-      "Read(storage/oauth-*.key)"
+      "Edit(**/.ssh/**)",
+      "Read(storage/oauth-*.key)",
+      "Edit(storage/oauth-*.key)"
     ]
   }
 }

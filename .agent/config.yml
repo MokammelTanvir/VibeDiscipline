@@ -1,6 +1,6 @@
 # VibeDiscipline project configuration
 version: 1
-mode: auto              # auto | guided | strict
+# The permission mode (auto | guided | strict) lives in .agent/permissions.yml.
 
 stack:
   ecosystem: php
@@ -10,12 +10,12 @@ stack:
 
 workflow:
   methodology: hybrid         # agile | waterfall | hybrid — see .agent/skills/_shared/methodology.md
+  # What each flag relaxes when false: .agent/skills/_shared/config-resolution.md
   require_plan: true         # Tier M+ requires a task doc before implementing
   require_tests: true
   require_review: true
   require_security_review: true
-  require_git_diff_review: true
-  approval_gate_tier: M        # lowest tier that requires recorded human approval
+  approval_gate_tier: M        # M | L — lowest tier that requires recorded human approval
 
 commit:
   attribution_trailer: false   # project's choice — set true to add AI co-author trailer

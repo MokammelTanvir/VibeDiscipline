@@ -15,7 +15,7 @@ absent violates this contract and must be fixed.
 
 ```
 1. .agent/config.yml exists?
-     → read stack, mode, workflow flags from it
+     → read stack and workflow flags from it (see "Workflow flags")
    else
      → detect from the codebase (manifests, lockfiles, CI)
 
@@ -51,6 +51,22 @@ absent violates this contract and must be fixed.
    else
      → hybrid (never block on asking)
 ```
+
+## Workflow flags
+
+`workflow.*` in the config file. A missing file or key means the stricter
+value (`true`, `M`). A flag relaxes one step; it never changes the tier and
+never relaxes the permission policy.
+
+| Key | When `false` |
+|---|---|
+| `require_plan` | Tier M may run from a plan stated in the conversation, with no task doc. Approval is still required. |
+| `require_tests` | A change may ship without a new test. Say so in the report; a bug fix still states how it was verified. |
+| `require_review` | The `code-review` self-review pass may be skipped. The diff is still read before commit. |
+| `require_security_review` | The Tier M/L security scan may be skipped, except on auth, payment and PII paths. |
+
+`approval_gate_tier` (`M` or `L`) is the lowest tier that needs a recorded
+approval. Set to `L`, Tier M work states its plan and proceeds.
 
 ## Why this matters
 

@@ -1,9 +1,11 @@
 # VibeDiscipline permission policy — source of truth.
-# Compiled by scripts/compile-permissions.sh into:
-#   .claude/settings.json  ·  .husky (or .git/hooks) pre-commit/pre-push  ·  docs/PERMISSIONS.md
+# Compiled by scripts/compile-permissions.cjs into:
+#   .claude/settings.json  ·  .githooks/pre-commit and pre-push  ·  docs/PERMISSIONS.md
 # Do not hand-edit the generated targets — edit this file and recompile.
 
 version: 1
+# auto: allow-list runs freely, confirm-list prompts. guided: every command
+# and write prompts. strict: reads prompt too. Deny wins in every mode.
 mode: auto        # auto | guided | strict
 
 commands:

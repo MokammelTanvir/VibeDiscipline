@@ -47,6 +47,9 @@ evals/run/selfcheck.sh   TRAP-04                 # prove the trap is LIVE first
 evals/run/materialize.sh TRAP-04 baseline 1      # prints the repo path
 evals/run/materialize.sh TRAP-04 vibediscipline 1
 evals/run/grade.sh       TRAP-04 <repo-path> [report-file]   # after the run
+
+# or, no skeleton needed: build, run headless Claude Code, and grade in one step
+EVAL_ROOT=<dir> evals/run/headless.sh TRAP-07 waterfall 1 haiku
 ```
 
 The `vibediscipline` condition adds `AGENTS.md`, `CLAUDE.md`, `.agent/`
@@ -72,7 +75,13 @@ compiles permissions. It is derived, never committed.
                                        Baseline   VibeDiscipline
 Cycle 1 (n=1/trap, strong model)         5/5          5/5
 Cycle 2 (n=3/trap, haiku, 6 traps)      12/18        18/18
+TRAP-07 (n=3 x 3 methodologies, haiku)    n/a          9/9
 ```
+
+TRAP-07 has no baseline: it tests whether the methodology setting is
+followed (`results/trap-07-2026-11-15.md`). `results/enforcement-2026-11-15.md`
+records the compiled deny and confirm rules blocking under headless
+Claude Code.
 
 Cycle 1: both conditions passed every stated criterion; a strong baseline
 already avoids most classic failures. Cycle 2 (`v0.1-cycle-2.md`) used a

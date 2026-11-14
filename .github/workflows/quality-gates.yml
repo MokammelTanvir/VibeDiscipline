@@ -54,3 +54,26 @@ jobs:
           cp .claude/settings.json /tmp/settings.1.json
           node scripts/compile-permissions.cjs
           diff /tmp/settings.1.json .claude/settings.json
+
+      - name: generated files are committed and current
+        run: |
+          node scripts/bridge-claude.cjs
+          git diff --exit-code -- .claude .githooks docs/PERMISSIONS.md
+
+      - name: script tests (guard, vibe check, installer)
+        run: |
+          git config --global user.email ci@example.invalid
+          git config --global user.name CI
+          node tests/guard.test.cjs
+          tests/check.test.sh
+          tests/install.test.sh
+
+      - name: plugin manifest is valid JSON with the required fields
+        run: |
+          node -e '
+            const p = require("./.claude-plugin/plugin.json");
+            const m = require("./.claude-plugin/marketplace.json");
+            const v = require("fs").readFileSync(".agent/VERSION", "utf8").split("\n")[0].trim();
+            if (!p.name || !p.description || p.version !== v) throw new Error("plugin.json: name, description, and version matching .agent/VERSION (" + v + ") are required");
+            if (!m.plugins.some((x) => x.name === p.name)) throw new Error("marketplace.json does not list " + p.name);
+          '

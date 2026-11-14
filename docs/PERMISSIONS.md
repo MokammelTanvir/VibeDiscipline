@@ -125,7 +125,9 @@ policy applies them.
 ## Enforcement layers
 
 1. Agent skills — knows the rule (weakest, can drift over a long session)
-2. Host settings (`.claude/settings.json`) — deterministic tool-call interception
+2. Host settings (`.claude/settings.json`) — deterministic tool-call interception,
+   plus the guard hook (`.claude/hooks/vibe-guard.cjs`) for commands hidden
+   inside shell wrappers such as `bash -c "..."`
 3. Git hooks (`.githooks/pre-commit`, `.githooks/pre-push`) — tool-agnostic
 4. CI (`.github/workflows/quality-gates.yml`) — the unbypassable backstop
 

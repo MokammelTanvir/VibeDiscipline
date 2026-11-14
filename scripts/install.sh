@@ -76,7 +76,7 @@ fi
 
 # ── .agent/ and scripts/ ────────────────────────────────────────────
 copy_tree .agent
-for s in check.sh compile-permissions.cjs set-methodology.cjs validate-portability.sh; do
+for s in check.sh compile-permissions.cjs vibe-guard.cjs bridge-claude.cjs set-methodology.cjs validate-portability.sh; do
   copy_file "scripts/$s"
 done
 [ "$DRY" -eq 1 ] || chmod +x "$TARGET"/scripts/check.sh "$TARGET"/scripts/validate-portability.sh 2>/dev/null || true
@@ -148,6 +148,13 @@ elif [ "$DRY" -eq 1 ]; then
   echo "  would: node scripts/compile-permissions.cjs"
 else
   (cd "$TARGET" && node scripts/compile-permissions.cjs) | sed 's/^/  /'
+fi
+
+# ── Claude Code skill stubs (.claude/skills/vibe-*), never anyone else's ──
+if command -v node >/dev/null 2>&1; then
+  if [ "$DRY" -eq 1 ]; then echo "  would: node scripts/bridge-claude.cjs"; else
+    (cd "$TARGET" && node scripts/bridge-claude.cjs) | sed 's/^/  /'
+  fi
 fi
 
 if [ -s "$SKIPLOG" ]; then

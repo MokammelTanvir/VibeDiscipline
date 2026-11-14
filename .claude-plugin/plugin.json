@@ -1,0 +1,11 @@
+{
+  "name": "vibediscipline",
+  "version": "0.1.0",
+  "description": "Engineering discipline skills for AI coding agents: ceremony tiers that scale process to the size of the change, recon, planning with approval gates, implementation, self-review, git and handoff.",
+  "author": { "name": "Mokammel Tanvir" },
+  "homepage": "https://github.com/MokammelTanvir/VibeDiscipline",
+  "repository": "https://github.com/MokammelTanvir/VibeDiscipline",
+  "license": "MIT",
+  "keywords": ["engineering-discipline", "agents", "code-review", "planning", "workflow"],
+  "skills": "./.agent/skills"
+}

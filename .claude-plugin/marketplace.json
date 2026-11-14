@@ -1,0 +1,14 @@
+{
+  "name": "vibediscipline",
+  "description": "VibeDiscipline: engineering discipline skills for AI coding agents.",
+  "owner": {
+    "name": "Mokammel Tanvir"
+  },
+  "plugins": [
+    {
+      "name": "vibediscipline",
+      "source": "./",
+      "description": "Engineering discipline skills for AI coding agents: ceremony tiers, recon, planning with approval gates, implementation, self-review, git and handoff."
+    }
+  ]
+}

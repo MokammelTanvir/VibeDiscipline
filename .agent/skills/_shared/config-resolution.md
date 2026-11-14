@@ -45,6 +45,11 @@ absent violates this contract and must be fixed.
      → use adapter depth (conventions.md, pitfalls.md)
    else
      → fall back to the ecosystem pack, then to universal detection
+
+7. workflow.methodology set in .agent/config.yml?
+     → agile | waterfall | hybrid, see _shared/methodology.md
+   else
+     → hybrid (never block on asking)
 ```
 
 ## Why this matters

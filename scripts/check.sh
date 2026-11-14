@@ -125,6 +125,37 @@ else
   echo "PASS  tests"
 fi
 
+# ── methodology gate (advisory; silent unless waterfall or a typo) ──
+# agile/hybrid/unset print nothing. Waterfall: source changed but the PRD or
+# TRD has no approved_at, i.e. the Requirements/Design gate is not passed.
+# Cannot tell an XS/S fix from feature work, so it only ever warns.
+METHODOLOGY=$(sed -n 's/^[[:space:]]*methodology:[[:space:]]*\([A-Za-z]*\).*/\1/p' .agent/config.yml 2>/dev/null | head -1)
+case "$METHODOLOGY" in
+  ""|agile|hybrid) ;;
+  waterfall)
+    if [ -n "$SRC_CHANGED" ]; then
+      UNAPPROVED=""
+      for doc in docs/product/PRD.md docs/technical/TRD.md; do
+        if [ ! -f "$doc" ] || ! grep -qE '^approved_at:[[:space:]]*[^[:space:]]+' "$doc"; then
+          UNAPPROVED="$UNAPPROVED $doc"
+        fi
+      done
+      if [ -n "$UNAPPROVED" ]; then
+        echo "WARN  methodology waterfall: source changed but not approved:$UNAPPROVED"
+        echo "                  ignore only for an XS/S fix; feature work needs the phase gate"
+        WARN=$((WARN + 1))
+      else
+        echo "PASS  methodology"
+      fi
+    fi
+    ;;
+  *)
+    echo "WARN  methodology unknown value '$METHODOLOGY' in .agent/config.yml"
+    echo "                  (use agile, waterfall or hybrid; node scripts/set-methodology.cjs)"
+    WARN=$((WARN + 1))
+    ;;
+esac
+
 echo ""
 echo "$FAIL failure(s), $WARN warning(s)."
 

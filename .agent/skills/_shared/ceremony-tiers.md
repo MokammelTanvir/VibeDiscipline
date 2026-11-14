@@ -62,6 +62,12 @@ The human can override with one word. This makes the process decision
 > Every artifact must have a named consumer: a human reviewer, a future
 > session, a test, or a downstream task. If it has none, do not write it.
 
+## Methodology does not change the tier
+
+`_shared/methodology.md` (agile, waterfall or hybrid) decides the order of
+work and where approval gates sit. It never raises or lowers the tier, and
+never creates a document the tier does not require.
+
 ## Consuming this file
 
 Every workflow skill (`recon`, `planning`, `implement`, `code-review`,

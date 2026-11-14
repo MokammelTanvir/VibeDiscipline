@@ -4,7 +4,7 @@ description: >
   Use when a requirement is stated and before any code is written at
   Tier M or L. Turns a requirement into a tiered plan with testable
   acceptance criteria and a recorded approval gate.
-loads: [_shared/ceremony-tiers.md, _shared/config-resolution.md]
+loads: [_shared/ceremony-tiers.md, _shared/methodology.md, _shared/config-resolution.md]
 ---
 
 # Planning
@@ -14,7 +14,10 @@ loads: [_shared/ceremony-tiers.md, _shared/config-resolution.md]
 1. Confirm the ceremony tier (see `_shared/ceremony-tiers.md`). If XS or S,
    this skill is not needed — go straight to `implement`.
 
-2. If the codebase is unfamiliar or `.agent/stack.lock.yml` is missing or
+2. Resolve the methodology (`_shared/methodology.md`). It sets the shape of
+   the plan and which approval gates apply; it never changes the tier.
+
+   If the codebase is unfamiliar or `.agent/stack.lock.yml` is missing or
    stale, run `recon` first.
 
 3. Write acceptance criteria — **testable statements only**. "Works well"
@@ -58,6 +61,7 @@ loads: [_shared/ceremony-tiers.md, _shared/config-resolution.md]
 id: TASK-00X
 title:
 tier: M
+methodology: hybrid    # agile | waterfall | hybrid
 status: planned        # planned | approved | in-progress | blocked | review | done
 approved_by:
 approved_at:

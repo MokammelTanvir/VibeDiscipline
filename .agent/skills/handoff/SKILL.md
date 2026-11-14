@@ -21,6 +21,7 @@ Update it — facts and pointers only, never narrative, kept under 60 lines:
 Updated: <date>
 
 ## Now
+Methodology: hybrid          (waterfall: add "Phase: 2 of 5, design")
 TASK-004 (user registration) — step 4 of 6: writing feature tests.
 
 ## Done this task
@@ -42,6 +43,8 @@ TASK-004 (user registration) — step 4 of 6: writing feature tests.
 ```
 
 If it exceeds 60 lines, it has become a log — trim it to current facts.
+The methodology line comes from `_shared/methodology.md`; record a switch
+of methodology under "Decisions made".
 
 ## If `docs/tasks/BOARD.md` exists
 

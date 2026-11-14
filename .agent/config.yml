@@ -9,7 +9,8 @@ stack:
   database: mysql
 
 workflow:
-  require_plan: true          # Tier M+ requires a task doc before implementing
+  methodology: hybrid         # agile | waterfall | hybrid — see .agent/skills/_shared/methodology.md
+  require_plan: true         # Tier M+ requires a task doc before implementing
   require_tests: true
   require_review: true
   require_security_review: true

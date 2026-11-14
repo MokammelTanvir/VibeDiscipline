@@ -17,6 +17,7 @@ modified. Uninstalling is deleting one directory.
 ```
 _shared/
   ceremony-tiers.md      how much process a change deserves — read this first
+  methodology.md         agile | waterfall | hybrid: order of work and where gates sit
   anti-slop.md           the catalogue of AI-generated code/process smells
   config-resolution.md   the graceful-degradation contract every skill follows
 

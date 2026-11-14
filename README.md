@@ -52,16 +52,34 @@ runs `boost:update`). Content placed outside that region survives
 `php artisan boost:update` — verified on a Laravel 13 + Boost project: a line
 tampered inside the region was restored, VibeDiscipline's text above it was kept.
 
+## Choose a methodology
+
+Agents follow the methodology you select, on top of the ceremony tiers:
+`agile` (small increments, approval per increment), `waterfall` (phases in
+order, approval per phase) or `hybrid` (the default: iterative below Tier L,
+document-first at Tier L). Methodology sets the order of work and where
+approval gates sit; it never changes the tier or relaxes permissions.
+
+```bash
+node scripts/set-methodology.cjs              # menu
+node scripts/set-methodology.cjs waterfall    # or pass the value
+node scripts/set-methodology.cjs --show
+```
+
+It writes `workflow.methodology` in `.agent/config.yml`. Details:
+`.agent/skills/_shared/methodology.md`.
+
 ## What's in v0.1
 
 ```
 AGENTS.md                    the constitution (≤100 lines)
 .agent/skills/                recon · planning · implement · code-review · git · handoff
-.agent/skills/_shared/        ceremony-tiers · anti-slop · config-resolution
+.agent/skills/_shared/        ceremony-tiers · methodology · anti-slop · config-resolution
 .agent/permissions.yml        compiled into .claude/settings.json + git hooks + CI
 .agent/ecosystems/php/        PHP/Composer-level knowledge
 .agent/adapters/laravel/      Laravel conventions + AI-specific pitfalls (Tier A)
 scripts/check.sh              vibe check — executable slop detection
+scripts/set-methodology.cjs   select agile | waterfall | hybrid
 scripts/compile-permissions.cjs
 scripts/validate-portability.sh
 evals/                        trap tasks proving the system changes agent behavior

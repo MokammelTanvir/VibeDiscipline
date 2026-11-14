@@ -21,12 +21,17 @@ public API, a new dependency, affects >~5 files, or the
 requirement is ambiguous. Never invent ceremony no one asked for — see
 `.agent/skills/_shared/ceremony-tiers.md` for the full routing rules.
 
+**Methodology** (`workflow.methodology` in `.agent/config.yml`: `agile` |
+`waterfall` | `hybrid`, default hybrid) sets the order of work and where
+approval gates sit. It never changes the tier. Read
+`.agent/skills/_shared/methodology.md` before planning Tier M/L work.
+
 ## Where things live
 
 ```
 .agent/skills/         how to perform each kind of task (recon, planning, implement,
                         code-review, git, handoff) — read the relevant SKILL.md before acting
-.agent/skills/_shared/  ceremony-tiers.md · anti-slop.md · config-resolution.md
+.agent/skills/_shared/  ceremony-tiers.md · methodology.md · anti-slop.md · config-resolution.md
 .agent/rules/           general engineering behavior
 .agent/ecosystems/php/  PHP/Composer-level knowledge
 .agent/adapters/laravel/ Laravel-specific conventions and pitfalls

@@ -2,6 +2,23 @@
 
 Notable changes to VibeDiscipline. Versions follow `.agent/VERSION`.
 
+## Unreleased
+
+### Added
+- Guard hook (`scripts/vibe-guard.cjs`, installed as a Claude Code
+  `PreToolUse` hook by the compiler). Denied and confirm-tier commands
+  hidden inside `bash -c`, `eval`, `env`, `sudo`, `xargs` or `$(...)` are
+  now caught; plain permission rules let them through.
+- `scripts/bridge-claude.cjs`: `.claude/skills/vibe-<name>` stubs so Claude
+  Code discovers the skills natively.
+- Claude Code plugin and marketplace manifest for a skills-only install.
+- PRD, TRD and ADR templates in `.agent/skills/planning/templates/`.
+- `tests/`: guard unit cases, vibe check and installer scenarios, run in CI.
+
+### Changed
+- The compiler keeps hooks already present in `.claude/settings.json`.
+- The installer copies the guard and bridge scripts and runs the bridge.
+
 ## 0.1.0 — 2026-11-15
 
 First pre-release: one stack (PHP and Laravel), narrow and deep.

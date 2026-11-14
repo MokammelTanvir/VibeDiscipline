@@ -25,11 +25,15 @@ Not in v0.1: PRD/TRD/ADR templates, the UI/UX skill, more adapters, the
 
 ## v0.2 — Broaden
 
-- Claude Code native packaging (skills bridge, plugin manifest, a hook
-  for confirm-tier commands)
+Done so far: a guard hook for commands hidden in shell wrappers, a Claude
+Code skills bridge, a plugin manifest, tests for the scripts, and PRD, TRD
+and ADR templates.
+
+Remaining:
+
 - Skills: testing, security, debug, database, refactor, dependency,
   discovery, product, architecture, ui-ux
-- Document templates: PRD, TRD, ADR, API-SPEC, UI-UX
+- Document templates: API-SPEC, UI-UX
 - Ecosystem packs: javascript, python. Tier-A adapters: nextjs, react,
   vue, nestjs, django
 - Full vibe check: size, duplication, error handling, docs
@@ -62,7 +66,8 @@ Read these before relying on the project.
   correctly stops for approval delivers nothing.
 - **The confirm gate is not reliable as prose.** In eval runs agents
   executed confirm-tier commands before asking. Host enforcement
-  (`.claude/settings.json`) is the layer that holds; see `docs/PERMISSIONS.md`.
+  (`.claude/settings.json` plus the guard hook) is the layer that holds.
+  A command written to a script file and then run is still not caught.
 - **Only Claude Code is a compile target.** Other tools get the git hooks
   and CI layers only.
 - **One stack is proven.** Laravel is the only adapter that has been

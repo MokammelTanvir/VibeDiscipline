@@ -3,23 +3,28 @@ Updated: 2026-11-15
 
 ## Now
 Methodology: hybrid
-v0.1.0 tagged 2026-11-15 (owner asked for commit, push and tag). Working
-tree clean at handoff. No GitHub release or repo topics yet.
+v0.1.0 tagged, pushed and released (GitHub pre-release) 2026-11-15. v0.2 under way.
+UNCOMMITTED (all mine, this session): TASK-004 (scripts/{vibe-guard,bridge-claude,
+compile-permissions}.cjs, scripts/install.sh, .claude/{settings.json,hooks,skills},
+.claude-plugin/, tests/, CI workflow), planning/templates/{PRD,TRD,ADR}.md and the
+skill/doc lines that reference them, README, CHANGELOG, ROADMAP, CLAUDE.md,
+docs/PERMISSIONS.md, evals/results/enforcement addendum, BOARD, this file.
 Always ask before commit or push. No co-author trailer.
 
 ## Done this session
-- check.sh scope + config; compiler mode/files/network; headless enforcement
-  run; public ROADMAP; CHANGELOG (all committed).
-- TRAP-07: 18 headless haiku runs. Wishlist prompt read as Tier M 9/9 (no
-  discrimination); marketplace prompt Tier L 9/9, methodologies differ as
-  designed, 0 code, 0 self-approval.
-- TASK-003: scripts/install.sh, 27 scratch checks pass. Compiler now leaves
-  an existing core.hooksPath alone.
+- Found: `bash -c "git clean -fd"` and `sh -c "git merge"` pass the compiled
+  rules (host matches the start of each sub-command). Guard hook closes it;
+  re-probed headless, both blocked. 32 unit cases.
+- Skills bridge (6 stubs), plugin + marketplace manifest (validate passes;
+  `--plugin-dir` shows vibediscipline:* skills).
+- tests/: guard 32, check 16, install 31 scenarios; added to CI.
+- PRD/TRD/ADR templates.
 
 ## Next
 Full list: CLAUDE.md maintainer section (model per step is there too).
-1. GitHub pre-release for v0.1.0 and repo topics (needs confirmation).
-2. v0.2: Claude Code native packaging (step 11), then skills (step 12).
+1. Owner reviews and commits the uncommitted work above; push.
+2. Skills, one at a time, each with a trap: testing, security, debug.
+3. JavaScript pack + Next.js adapter; full vibe check; eval runner on 2 models.
 
 ## Open (needs the user)
 - Methodology default: assumed hybrid when unset, no forced prompt (TASK-002 Q1).
@@ -41,6 +46,8 @@ Full list: CLAUDE.md maintainer section (model per step is there too).
 - Permission mode lives only in permissions.yml; removed from config.yml.
 - `require_git_diff_review` removed: a non-negotiable cannot be a flag.
 - Public roadmap is docs/ROADMAP.md; the full plan stays gitignored.
+- Guard fails open; bridge stubs are prefixed `vibe-`; templates live under
+  planning/ until a product skill exists.
 
 ## Do not touch
 - /Users/mokammeltanvir/BdStadium (original) — only the scratch clone.

@@ -8,7 +8,7 @@ Do not duplicate its content here; edit AGENTS.md instead.
 
 Live state: `.agent/state.md` · tasks: `docs/tasks/BOARD.md` · full design:
 `VibeDiscipline-Full-Plan.md` (gitignored, §45 roadmap, §45A readiness).
-Overall ≈ 32% of v1.0. Repo is PUBLIC; tagged v0.1.0 on 2026-11-15; no GitHub release yet.
+Overall ≈ 38% of v1.0. Repo is PUBLIC; v0.1.0 tagged and released (pre-release) 2026-11-15.
 
 ## Done
 - v0.1 core: AGENTS.md (72 lines), 6 skills (recon, planning, implement,
@@ -27,27 +27,32 @@ Overall ≈ 32% of v1.0. Repo is PUBLIC; tagged v0.1.0 on 2026-11-15; no GitHub 
 - Step 8: TRAP-07 run headless, 18 runs (`evals/results/trap-07-2026-11-15.md`);
   `evals/run/headless.sh` is the first automated runner.
 - Step 10 (TASK-003): `scripts/install.sh`.
+- Step 11 (TASK-004): guard hook `scripts/vibe-guard.cjs` (closes the
+  `bash -c "..."` bypass, observed and re-tested), `scripts/bridge-claude.cjs`
+  (`.claude/skills/vibe-*` stubs), `.claude-plugin/` manifest (validated).
+- Step 13, partly: PRD, TRD, ADR templates in `planning/templates/`.
+- Step 17, partly: `tests/` (guard, check, install) wired into CI.
 
 ## A — Publishable v0.1.0 (what is left)
 8. Decide TRAP-06 (harden or retire). Decide for hybrid Tier L whether the
    document set is written or only proposed before approval (TRAP-07 finding).
-9. GitHub pre-release for `v0.1.0`, repo topics (owner confirms each).
+9. Repo topics (owner confirms).
 Note: `.agent/stack.lock.yml` is deliberately absent here; a template repo
 must not ship its own detected stack. `recon` writes it per project.
 
 ## B — v0.2 Broaden (the bulk)
-11. Claude Code native packaging: bridge `.agent/skills` → `.claude/skills`,
-    plugin manifest, PreToolUse hook for confirm-tier commands (reasoning
-    alone failed the confirm gate in 4 eval runs).
+Rule for every skill and adapter below (CONTRIBUTING.md): it ships with a
+trap that shows the failure it fixes. Do not write them in bulk.
 12. Skills, failure-driven order: testing, security, debug, then database,
     refactor, dependency, discovery, product, architecture, ui-ux (0/10).
-13. Templates: PRD, TRD, ADR, API-SPEC, UI-UX (1/6; waterfall needs them).
+13. Templates: API-SPEC, UI-UX (with the ui-ux and architecture skills).
 14. JavaScript pack + Next.js adapter (second stack proves universality);
     then python, react, vue, nestjs, django.
 15. Full vibe check: scope, size, duplication, error-handling, docs.
 16. Evals: automated `claude -p` runner, 2+ models, n≥5, blinded grading,
     retained transcripts, traps 7 → 15. Fix the memory-leak isolation issue.
-17. Adapter contract: `_TEMPLATE`, schema validation in CI. Tests for scripts/.
+17. Adapter contract: `_TEMPLATE`, schema validation in CI. Tests still
+    missing for compile-permissions, set-methodology, bridge-claude.
 18. README: 60-second quickstart, before/after demo, eval table, FAQ.
 
 ## C — v0.3 Tooling, then v1.0

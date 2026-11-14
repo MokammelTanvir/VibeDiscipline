@@ -20,7 +20,8 @@ Roadmap, current status and known limitations:
    `.agent/permissions.yml` is compiled into `.claude/settings.json`,
    git hooks, and CI — layers an agent cannot simply drift past.
    Seen blocking a denied command, a confirm-tier command and a denied
-   file in a headless Claude Code run:
+   file in a headless Claude Code run, including commands hidden inside
+   `bash -c "..."`, which plain permission rules let through:
    [`evals/results/enforcement-2026-11-15.md`](./evals/results/enforcement-2026-11-15.md).
 3. **Detect the stack, never assume it.** No adapter is required for a
    project to work correctly — `recon` derives commands from lockfiles,
@@ -31,6 +32,9 @@ Roadmap, current status and known limitations:
 ```bash
 # Skills only — pure behavior, zero configuration, delete anytime
 npx degit MokammelTanvir/VibeDiscipline/.agent/skills .agent/skills
+
+# Skills only, as a Claude Code plugin (inside Claude Code)
+/plugin install vibediscipline --marketplace MokammelTanvir/VibeDiscipline
 
 # Skills + enforced permissions + AGENTS.md (recommended for most projects)
 git clone https://github.com/MokammelTanvir/VibeDiscipline.git
@@ -86,13 +90,16 @@ AGENTS.md                    the constitution (≤100 lines)
 scripts/check.sh              vibe check — scope, secrets, leftovers, dependency, tests
 scripts/install.sh            install into an existing project
 scripts/set-methodology.cjs   select agile | waterfall | hybrid
-scripts/compile-permissions.cjs
+scripts/compile-permissions.cjs  permissions.yml -> settings, guard hook, git hooks, docs
+scripts/vibe-guard.cjs        PreToolUse hook: catches denied commands inside wrappers
+scripts/bridge-claude.cjs     makes the skills discoverable as /vibe-* in Claude Code
+.claude-plugin/               plugin + marketplace manifest (skills-only install)
+tests/                        guard, vibe check and installer scenarios (run in CI)
 scripts/validate-portability.sh
 evals/                        trap tasks proving the system changes agent behavior
 ```
 
-Not yet built (see [`docs/ROADMAP.md`](./docs/ROADMAP.md)): PRD/TRD/ADR
-templates, the UI/UX skill, additional adapters, the `vibe` CLI, and the
+Not yet built (see [`docs/ROADMAP.md`](./docs/ROADMAP.md)): the UI/UX skill, additional adapters, the `vibe` CLI, and the
 template-repo bootstrap. v0.1 is deliberately narrow and deep — one real
 stack working well beats twenty adapters that are never tested.
 

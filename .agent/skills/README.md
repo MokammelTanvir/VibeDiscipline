@@ -6,7 +6,7 @@ dependency on anything else in this repository — see
 directory alone into any existing project:
 
 ```bash
-npx degit <org>/vibediscipline/.agent/skills .agent/skills
+npx degit MokammelTanvir/VibeDiscipline/.agent/skills .agent/skills
 ```
 
 Nothing outside `.agent/skills/` will be created. No existing file is
@@ -31,7 +31,7 @@ handoff/SKILL.md         write cross-session state before a session ends
 
 More skills (discovery, product, architecture, ui-ux, testing, security,
 database, debug, refactor, dependency) ship in v0.2 once this core set is
-proven. See the full plan for the complete roadmap.
+proven. The roadmap is in the VibeDiscipline repository's ROADMAP.
 
 ## How a skill decides how much to do
 

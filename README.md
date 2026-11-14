@@ -9,8 +9,8 @@ agent can drift away from), framework detection that works on any stack
 from day one, and an executable slop checker.
 
 **Status: v0.1.0 — pre-release, being dogfooded on real Laravel projects.**
-The full design rationale lives in
-[`VibeDiscipline-Full-Plan.md`](./VibeDiscipline-Full-Plan.md).
+Roadmap, current status and known limitations:
+[`docs/ROADMAP.md`](./docs/ROADMAP.md).
 
 ## The three things that make this different
 
@@ -19,6 +19,9 @@ The full design rationale lives in
 2. **Rules compiled into gates, not just read as prose.**
    `.agent/permissions.yml` is compiled into `.claude/settings.json`,
    git hooks, and CI — layers an agent cannot simply drift past.
+   Seen blocking a denied command, a confirm-tier command and a denied
+   file in a headless Claude Code run:
+   [`evals/results/enforcement-2026-11-15.md`](./evals/results/enforcement-2026-11-15.md).
 3. **Detect the stack, never assume it.** No adapter is required for a
    project to work correctly — `recon` derives commands from lockfiles,
    manifests, and CI, and caches them in `.agent/stack.lock.yml`.
@@ -27,7 +30,7 @@ The full design rationale lives in
 
 ```bash
 # Skills only — pure behavior, zero configuration, delete anytime
-npx degit <org>/vibediscipline/.agent/skills .agent/skills
+npx degit MokammelTanvir/VibeDiscipline/.agent/skills .agent/skills
 
 # Skills + enforced permissions + AGENTS.md (recommended for most projects)
 npx vibe init --tier governed     # ships in v0.3; for now, copy manually:
@@ -35,9 +38,12 @@ npx vibe init --tier governed     # ships in v0.3; for now, copy manually:
 #   but do NOT carry over this repo's own project state:
 #     .agent/state.md  (start from an empty one)
 #     .agent/config.yml  (edit the `stack:` block for your project)
+#     CLAUDE.md          (keep its first two lines; the rest is this repo's status)
 #   and do NOT overwrite an AGENTS.md / CLAUDE.md you already have
 #     (see "Already have an AGENTS.md?" below)
 #   then run: node scripts/compile-permissions.cjs
+#   then open the project in Claude Code once and accept the trust dialog;
+#   until a workspace is trusted, Claude Code ignores the compiled allow-list
 ```
 
 ### Already have an AGENTS.md or CLAUDE.md?
@@ -78,14 +84,14 @@ AGENTS.md                    the constitution (≤100 lines)
 .agent/permissions.yml        compiled into .claude/settings.json + git hooks + CI
 .agent/ecosystems/php/        PHP/Composer-level knowledge
 .agent/adapters/laravel/      Laravel conventions + AI-specific pitfalls (Tier A)
-scripts/check.sh              vibe check — executable slop detection
+scripts/check.sh              vibe check — scope, secrets, leftovers, dependency, tests
 scripts/set-methodology.cjs   select agile | waterfall | hybrid
 scripts/compile-permissions.cjs
 scripts/validate-portability.sh
 evals/                        trap tasks proving the system changes agent behavior
 ```
 
-Not yet built (see the roadmap in the full plan, Section 45): PRD/TRD/ADR
+Not yet built (see [`docs/ROADMAP.md`](./docs/ROADMAP.md)): PRD/TRD/ADR
 templates, the UI/UX skill, additional adapters, the `vibe` CLI, and the
 template-repo bootstrap. v0.1 is deliberately narrow and deep — one real
 stack working well beats twenty adapters that are never tested.

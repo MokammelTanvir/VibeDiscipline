@@ -1,8 +1,7 @@
 # Evaluation Harness
 
 Trap tasks that prove VibeDiscipline changes agent behavior, and catch
-regressions when a skill or rule is edited. See
-`VibeDiscipline-Full-Plan.md`, Section 39, for the full design.
+regressions when a skill or rule is edited.
 
 ## Status
 

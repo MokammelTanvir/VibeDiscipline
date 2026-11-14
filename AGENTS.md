@@ -32,7 +32,6 @@ approval gates sit. It never changes the tier. Read
 .agent/skills/         how to perform each kind of task (recon, planning, implement,
                         code-review, git, handoff) — read the relevant SKILL.md before acting
 .agent/skills/_shared/  ceremony-tiers.md · methodology.md · anti-slop.md · config-resolution.md
-.agent/rules/           general engineering behavior
 .agent/ecosystems/php/  PHP/Composer-level knowledge
 .agent/adapters/laravel/ Laravel-specific conventions and pitfalls
 .agent/permissions.yml  what may/may not be done — compiled into real enforcement,

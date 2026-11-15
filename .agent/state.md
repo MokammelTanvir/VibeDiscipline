@@ -3,33 +3,32 @@ Updated: 2026-11-15
 
 ## Now
 Methodology: hybrid
-v0.1.0 tagged, pushed and released (GitHub pre-release) 2026-11-15. v0.2 under way.
-UNCOMMITTED (all mine, this session): TASK-004 (scripts/{vibe-guard,bridge-claude,
-compile-permissions}.cjs, scripts/install.sh, .claude/{settings.json,hooks,skills},
-.claude-plugin/, tests/, CI workflow), planning/templates/{PRD,TRD,ADR}.md and the
-skill/doc lines that reference them, README, CHANGELOG, ROADMAP, CLAUDE.md,
-docs/PERMISSIONS.md, evals/results/enforcement addendum, BOARD, this file.
+v0.1.0 released 2026-11-15. v0.2 under way; pushed through 4971397, CI green.
+UNCOMMITTED (all mine, this session): TRAP-08 (fixture, spec, results),
+evals/run/{headless.sh,grade.sh}, evals/README.md, README.md, CHANGELOG.md,
+CLAUDE.md, this file.
 Always ask before commit or push. No co-author trailer.
 
 ## Done this session
-- Found: `bash -c "git clean -fd"` and `sh -c "git merge"` pass the compiled
-  rules (host matches the start of each sub-command). Guard hook closes it;
-  re-probed headless, both blocked. 32 unit cases.
-- Skills bridge (6 stubs), plugin + marketplace manifest (validate passes;
-  `--plugin-dir` shows vibediscipline:* skills).
-- tests/: guard 32, check 16, install 31 scenarios; added to CI.
-- PRD/TRD/ADR templates.
+- TASK-004 committed and pushed: guard hook, skills bridge, plugin, tests in CI.
+- PRD/TRD/ADR templates; check.sh debug patterns per language.
+- TRAP-08 (IDOR): 12 headless haiku runs, both conditions 6/6 even after
+  hardening the fixture. No security skill written.
+- headless.sh: baseline condition; VD condition built by the real installer.
+- README quickstart + evidence table.
 
 ## Next
 Full list: CLAUDE.md maintainer section (model per step is there too).
 1. Owner reviews and commits the uncommitted work above; push.
-2. Skills, one at a time, each with a trap: testing, security, debug.
-3. JavaScript pack + Next.js adapter; full vibe check; eval runner on 2 models.
+2. Owner decides whether to cut the 10-skill list (see Open).
+3. Candidates with evidence behind them: second-turn eval (behaviour after
+   approval), a second model, JavaScript pack, full vibe check.
 
 ## Open (needs the user)
 - Methodology default: assumed hybrid when unset, no forced prompt (TASK-002 Q1).
 - TRAP-06 did not discriminate: harden the fixture or retire it?
 - Hybrid Tier L: document set written or only proposed before approval?
+- Cut the planned 10 skills? Three evals show no code-level failure to fix.
 - Corrected confirm-gate wording (TRAP-06 VD, n=3) not re-tested.
 - Eval caveats: n=3, haiku only, same author grades and judges.
 - BdStadium `DeliveryZone::chargeFor()` returns 0 with no matching zone:

@@ -32,6 +32,10 @@ Overall ≈ 38% of v1.0. Repo is PUBLIC; v0.1.0 tagged and released (pre-release
   (`.claude/skills/vibe-*` stubs), `.claude-plugin/` manifest (validated).
 - Step 13, partly: PRD, TRD, ADR templates in `planning/templates/`.
 - Step 17, partly: `tests/` (guard, check, install) wired into CI.
+- Step 18, partly: README quickstart and evidence table (no demo, no FAQ).
+- TRAP-08 (IDOR), 12 runs: baseline and VD both 6/6, so no security skill
+  was written. Third eval in a row where a classic code-level failure does
+  not reproduce on haiku; the measured gains are process and enforcement.
 
 ## A — Publishable v0.1.0 (what is left)
 8. Decide TRAP-06 (harden or retire). Decide for hybrid Tier L whether the
@@ -88,6 +92,9 @@ the grader is a different model from the subject, reading blind; every
 new or changed skill is re-run on Sonnet before it counts as done.
 
 ## Open decisions (owner)
+- The 10-skill list in step 12: evidence so far does not support most of
+  it. Proposal: keep `testing` and `debug` only if a trap shows a failure;
+  spend v0.2 on enforcement, ambiguity and approval handling instead.
 - Methodology default when unset (assumed hybrid, no forced prompt).
 - Stop-and-ask vs finish-the-task in non-interactive runs (TRAP-01/04 cost).
 - Publish the full plan, or only a trimmed ROADMAP.md.

@@ -8,9 +8,50 @@ change, permissions compiled into real enforcement (not just prose an
 agent can drift away from), framework detection that works on any stack
 from day one, and an executable slop checker.
 
-**Status: v0.1.0 — pre-release, being dogfooded on real Laravel projects.**
+**Status: v0.1.0 pre-release. One stack (Laravel) and one host (Claude
+Code) are covered in depth; the skills themselves are stack-neutral.**
 Roadmap, current status and known limitations:
 [`docs/ROADMAP.md`](./docs/ROADMAP.md).
+
+## Quickstart (about a minute)
+
+```bash
+git clone https://github.com/MokammelTanvir/VibeDiscipline.git
+VibeDiscipline/scripts/install.sh /path/to/your/project
+```
+
+Open the project in Claude Code, accept the trust dialog, and ask for a
+change. The agent now states a tier before it starts
+(`Tier: S — bug fix in cart total, single file.`), stops for your approval
+on anything feature-sized, and cannot run what `.agent/permissions.yml`
+denies. Try it:
+
+- "Fix the typo in the footer" → edits, verifies, done. No plan, no doc.
+- "Add notifications" → no code; it asks what kind, for whom, and how.
+- `bash -c "git reset --hard"` → refused by the guard hook.
+
+To remove it: delete `.agent/`, `.claude/hooks/vibe-*`, `.claude/skills/vibe-*`,
+`.githooks/` (then `git config --unset core.hooksPath`), the generated
+`permissions` block and the `vibe-guard` hook entry in `.claude/settings.json`,
+and the VibeDiscipline block at the top of `AGENTS.md`. Remove the hook entry
+together with the hook file, or every shell command will report a missing hook.
+
+## What the evidence says so far
+
+| Measured | Without | With | Source |
+|---|---|---|---|
+| Six traps, stated pass criteria (haiku, n=3) | 12/18 | 18/18 | [cycle 2](./evals/results/v0.1-cycle-2.md) |
+| Asked instead of building on an ambiguous request | 0/3 | 3/3 | cycle 2, TRAP-01 |
+| Regression test added with a bug fix | 0/3 | 3/3 | cycle 2, TRAP-02 |
+| Denied command hidden in `bash -c` blocked | no | yes | [enforcement](./evals/results/enforcement-2026-11-15.md) |
+| Work sequenced per the chosen methodology at Tier L | n/a | 9/9 | [TRAP-07](./evals/results/trap-07-2026-11-15.md) |
+| Authorization check on a new endpoint | 6/6 | 6/6 | [TRAP-08](./evals/results/trap-08-2026-11-15.md) |
+
+Read it as indicative, not proven: small samples, one model, graded by the
+author. The gains are in process and enforcement. On classic code-level
+mistakes a current model does about as well on its own, and the cost of
+the process is real: an agent that stops to ask delivers nothing in an
+unattended run.
 
 ## The three things that make this different
 
@@ -27,7 +68,7 @@ Roadmap, current status and known limitations:
    project to work correctly — `recon` derives commands from lockfiles,
    manifests, and CI, and caches them in `.agent/stack.lock.yml`.
 
-## Install into an existing project
+## Install options
 
 ```bash
 # Skills only — pure behavior, zero configuration, delete anytime

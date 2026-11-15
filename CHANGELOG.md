@@ -15,6 +15,11 @@ Notable changes to VibeDiscipline. Versions follow `.agent/VERSION`.
 - PRD, TRD and ADR templates in `.agent/skills/planning/templates/`.
 - `tests/`: guard unit cases, vibe check and installer scenarios, run in CI.
 
+- TRAP-08 (missing authorization), run in both conditions: no difference
+  found, so no security skill was added. `evals/run/headless.sh` gained a
+  baseline condition and now builds its repo with the real installer.
+- README: quickstart and an evidence table.
+
 ### Changed
 - The compiler keeps hooks already present in `.claude/settings.json`.
 - The installer copies the guard and bridge scripts and runs the bridge.

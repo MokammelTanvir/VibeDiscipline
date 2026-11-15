@@ -3,7 +3,10 @@
 # and grade it. Unlike a subagent run, the agent here has its own session, so
 # the compiled permissions really apply and no parent memory leaks in.
 #
-# Usage: EVAL_ROOT=<dir> headless.sh <TRAP-0X> <agile|waterfall|hybrid> <run-no> [model]
+# Usage: EVAL_ROOT=<dir> headless.sh <TRAP-0X> <baseline|agile|waterfall|hybrid> <run-no> [model]
+#
+# baseline            the fixture only: no VibeDiscipline files, no compiled rules
+# agile|waterfall|hybrid  the VibeDiscipline condition with that methodology
 #
 # The repo is the fixture overlay as-is (stub artisan/composer.json, not a
 # bootable app) plus the VibeDiscipline files. That is enough for traps that
@@ -11,7 +14,7 @@
 # NEVER writes into evals/fixtures/. Reports land in $EVAL_ROOT/reports/.
 set -euo pipefail
 
-TRAP="${1:?trap id, e.g. TRAP-07}"; METH="${2:?agile|waterfall|hybrid}"; RUN="${3:?run number}"; MODEL="${4:-haiku}"
+TRAP="${1:?trap id, e.g. TRAP-07}"; METH="${2:?baseline|agile|waterfall|hybrid}"; RUN="${3:?run number}"; MODEL="${4:-haiku}"
 : "${EVAL_ROOT:?set EVAL_ROOT to the dir that will hold throwaway repos}"
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 FIX="$ROOT/evals/fixtures/$TRAP/baseline"
@@ -25,14 +28,13 @@ cp -R "$FIX/." "$DEST/"
 cd "$DEST"
 git init -q -b main
 git config user.name "Eval Seed"; git config user.email "eval-seed@example.invalid"
-cp "$ROOT/AGENTS.md" .
-head -2 "$ROOT/CLAUDE.md" > CLAUDE.md          # the pointer only, as an install would
-cp -R "$ROOT/.agent" .agent
-rm -f .agent/state.md
-mkdir -p scripts
-cp "$ROOT/scripts/check.sh" "$ROOT/scripts/compile-permissions.cjs" "$ROOT/scripts/set-methodology.cjs" scripts/
-node scripts/set-methodology.cjs "$METH" >/dev/null
-node scripts/compile-permissions.cjs >/dev/null
+case "$METH" in
+  baseline) ;;
+  agile|waterfall|hybrid)
+    # The real installer, so a run sees exactly what a user's project would.
+    "$ROOT/scripts/install.sh" . --methodology "$METH" >/dev/null ;;
+  *) echo "bad condition: $METH" >&2; exit 2 ;;
+esac
 git add -A
 git -c core.hooksPath=/dev/null commit -q -m "Initial commit"
 

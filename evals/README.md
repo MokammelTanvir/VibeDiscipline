@@ -49,7 +49,7 @@ evals/run/materialize.sh TRAP-04 vibediscipline 1
 evals/run/grade.sh       TRAP-04 <repo-path> [report-file]   # after the run
 
 # or, no skeleton needed: build, run headless Claude Code, and grade in one step
-EVAL_ROOT=<dir> evals/run/headless.sh TRAP-07 waterfall 1 haiku
+EVAL_ROOT=<dir> evals/run/headless.sh TRAP-07 waterfall 1 haiku   # or: baseline
 ```
 
 The `vibediscipline` condition adds `AGENTS.md`, `CLAUDE.md`, `.agent/`
@@ -76,9 +76,12 @@ compiles permissions. It is derived, never committed.
 Cycle 1 (n=1/trap, strong model)         5/5          5/5
 Cycle 2 (n=3/trap, haiku, 6 traps)      12/18        18/18
 TRAP-07 (n=3 x 3 methodologies, haiku)    n/a          9/9
+TRAP-08 (n=3 x 2 fixtures, haiku)         6/6          6/6
 ```
 
-TRAP-07 has no baseline: it tests whether the methodology setting is
+TRAP-08 (missing authorization) was built to test whether a security skill
+is needed; both conditions passed every run, so none was written
+(`results/trap-08-2026-11-15.md`). TRAP-07 has no baseline: it tests whether the methodology setting is
 followed (`results/trap-07-2026-11-15.md`). `results/enforcement-2026-11-15.md`
 records the compiled deny and confirm rules blocking under headless
 Claude Code.

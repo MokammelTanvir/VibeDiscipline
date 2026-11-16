@@ -3,26 +3,29 @@ Updated: 2026-11-15
 
 ## Now
 Methodology: hybrid
-v0.1.0 released 2026-11-15. v0.2 under way; pushed through 4971397, CI green.
-UNCOMMITTED (all mine, this session): TRAP-08 (fixture, spec, results),
-evals/run/{headless.sh,grade.sh}, evals/README.md, README.md, CHANGELOG.md,
-CLAUDE.md, this file.
+v0.1.0 released 2026-11-15. Committed through 0c9a185 (2 commits not pushed).
+UNCOMMITTED (all mine, this session, TASK-005): package.json, bin/vibe.cjs,
+.agent/presets/, scripts/install.sh, docs/GUIDE.md, tests/{cli,install}.test.sh,
+CI workflow, README.md, CHANGELOG.md, docs/{ROADMAP,README}.md, BOARD, TASK-005
+doc, CLAUDE.md, this file.
 Always ask before commit or push. No co-author trailer.
 
 ## Done this session
-- TASK-004 committed and pushed: guard hook, skills bridge, plugin, tests in CI.
-- PRD/TRD/ADR templates; check.sh debug patterns per language.
-- TRAP-08 (IDOR): 12 headless haiku runs, both conditions 6/6 even after
-  hardening the fixture. No security skill written.
-- headless.sh: baseline condition; VD condition built by the real installer.
-- README quickstart + evidence table.
+- `vibe` CLI; `npx --package=<tarball> vibe init` and `doctor` verified.
+  `npx github:MokammelTanvir/VibeDiscipline init` is documented but only
+  works once this is pushed: verify it after the push.
+- Presets node/python/generic + detection; `--upgrade`; clean config template
+  (installs were inheriting this repo's config, which could block a first commit).
+- docs/GUIDE.md. All tests pass: guard 32, check 18, install 55, cli 23.
+- Own guard hook blocked a heredoc containing a `*DROP ...*` pattern: expected
+  behaviour, documented in the guide's troubleshooting.
 
 ## Next
 Full list: CLAUDE.md maintainer section (model per step is there too).
-1. Owner reviews and commits the uncommitted work above; push.
-2. Owner decides whether to cut the 10-skill list (see Open).
-3. Candidates with evidence behind them: second-turn eval (behaviour after
-   approval), a second model, JavaScript pack, full vibe check.
+1. Owner reviews, commits, pushes; then run the npx github: command for real.
+2. Tag v0.2.0 once the owner agrees (bump .agent/VERSION, package.json, plugin.json).
+3. npm publish (owner: check the name), demo GIF, dogfood the node and python
+   presets on real projects, second-model evals.
 
 ## Open (needs the user)
 - Methodology default: assumed hybrid when unset, no forced prompt (TASK-002 Q1).

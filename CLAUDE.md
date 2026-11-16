@@ -8,7 +8,7 @@ Do not duplicate its content here; edit AGENTS.md instead.
 
 Live state: `.agent/state.md` · tasks: `docs/tasks/BOARD.md` · full design:
 `VibeDiscipline-Full-Plan.md` (gitignored, §45 roadmap, §45A readiness).
-Overall ≈ 38% of v1.0. Repo is PUBLIC; v0.1.0 tagged and released (pre-release) 2026-11-15.
+Overall ≈ 45% of v1.0 (v0.1 100%, v0.2 ~45%, v0.3 ~30%, v1.0 ~12%). Repo is PUBLIC; v0.1.0 tagged and released (pre-release) 2026-11-15.
 
 ## Done
 - v0.1 core: AGENTS.md (72 lines), 6 skills (recon, planning, implement,
@@ -33,6 +33,10 @@ Overall ≈ 38% of v1.0. Repo is PUBLIC; v0.1.0 tagged and released (pre-release
 - Step 13, partly: PRD, TRD, ADR templates in `planning/templates/`.
 - Step 17, partly: `tests/` (guard, check, install) wired into CI.
 - Step 18, partly: README quickstart and evidence table (no demo, no FAQ).
+- TASK-005: `vibe` CLI (`bin/vibe.cjs` + `package.json`; init, upgrade,
+  doctor, check, compile, methodology; verified through npx from a packed
+  tarball), permission presets (node, python, generic) with stack detection,
+  `install.sh --upgrade`, clean config template for installs, `docs/GUIDE.md`.
 - TRAP-08 (IDOR), 12 runs: baseline and VD both 6/6, so no security skill
   was written. Third eval in a row where a classic code-level failure does
   not reproduce on haiku; the measured gains are process and enforcement.
@@ -60,7 +64,8 @@ trap that shows the failure it fixes. Do not write them in bulk.
 18. README: 60-second quickstart, before/after demo, eval table, FAQ.
 
 ## C — v0.3 Tooling, then v1.0
-19. `vibe` CLI (init, doctor, compile, check, upgrade); check npm name first.
+19. `vibe` CLI: first version done. Left: npm publish (check the name
+    first), Node port of install.sh and check.sh for native Windows.
 20. Bridges: Cursor, Copilot, Windsurf, Codex. Replace hand-rolled YAML parser.
 21. Remaining packs (ruby, go, jvm, dotnet, rust); upgrade path with merge.
 22. v1.0: spec freeze + compatibility promise, docs site, governance,

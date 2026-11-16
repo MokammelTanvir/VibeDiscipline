@@ -8,7 +8,7 @@ change, permissions compiled into real enforcement (not just prose an
 agent can drift away from), framework detection that works on any stack
 from day one, and an executable slop checker.
 
-**Status: v0.2.0 pre-release. One stack (Laravel) and one host (Claude
+**Status: v0.2.1 pre-release. One stack (Laravel) and one host (Claude
 Code) are covered in depth; the skills themselves are stack-neutral.**
 Roadmap, current status and known limitations:
 [`docs/ROADMAP.md`](./docs/ROADMAP.md).
@@ -17,7 +17,7 @@ Roadmap, current status and known limitations:
 
 ```bash
 cd your-project
-npx github:MokammelTanvir/VibeDiscipline init
+npx vibediscipline init
 ```
 
 It detects your stack (Laravel, Node, Python, or generic), keeps every file
@@ -34,9 +34,10 @@ denies. Try it:
 - "Add notifications" → no code; it asks what kind, for whom, and how.
 - `bash -c "git reset --hard"` → refused by the guard hook.
 
-Check an installation with `npx github:MokammelTanvir/VibeDiscipline doctor`,
-update it with `... upgrade`. Removing it is five steps in the
-[guide](./docs/GUIDE.md#uninstall).
+Check an installation with `npx vibediscipline doctor`, update it with
+`npx vibediscipline upgrade`, remove it with `npx vibediscipline uninstall`
+(your own files are kept). No npm? `npx github:MokammelTanvir/VibeDiscipline init`
+does the same.
 
 ## What the evidence says so far
 
@@ -83,7 +84,7 @@ npx degit MokammelTanvir/VibeDiscipline/.agent/skills .agent/skills
 /plugin install vibediscipline --marketplace MokammelTanvir/VibeDiscipline
 
 # Skills + enforced permissions + AGENTS.md (recommended for most projects)
-npx github:MokammelTanvir/VibeDiscipline init
+npx vibediscipline init
 #   --stack laravel|node|python|generic   --methodology agile|waterfall|hybrid
 #   --skills-only   --dry-run   --force
 
@@ -153,7 +154,7 @@ evals/                        trap tasks proving the system changes agent behavi
 
 Not yet built (see [`docs/ROADMAP.md`](./docs/ROADMAP.md)): framework
 knowledge beyond Laravel, enforcement for tools other than Claude Code,
-native Windows support, and an npm release. One real stack working well
+and native Windows support. One real stack working well
 beats twenty adapters that are never tested.
 
 ## Contributing

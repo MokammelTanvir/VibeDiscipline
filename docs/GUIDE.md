@@ -31,9 +31,10 @@ there, and how to configure, upgrade and remove it.
 From your project's root:
 
 ```bash
-npx github:MokammelTanvir/VibeDiscipline init
+npx vibediscipline init
 ```
 
+Without npm, straight from GitHub: `npx github:MokammelTanvir/VibeDiscipline init`.
 Or from a clone, which is the same installer:
 
 ```bash
@@ -41,7 +42,11 @@ git clone https://github.com/MokammelTanvir/VibeDiscipline.git
 VibeDiscipline/scripts/install.sh /path/to/your/project
 ```
 
-Preview first with `--dry-run`. Nothing you already have is overwritten:
+In a terminal `init` asks two questions with arrow-key menus (your stack,
+pre-selected from what it detects, and the methodology). Add `--yes` to
+take the defaults, as CI does. Preview first with `--dry-run`. If
+VibeDiscipline is already installed, `init` changes nothing and offers
+`upgrade`. Nothing you already have is overwritten:
 
 | You already have | What the installer does |
 |---|---|
@@ -76,7 +81,7 @@ Then do three things:
 2. Ask the agent to "run the recon skill". It reads your manifests, lockfile
    and CI, and writes the real test, lint and build commands to
    `.agent/stack.lock.yml`.
-3. Run `npx github:MokammelTanvir/VibeDiscipline doctor`, then commit.
+3. Run `npx vibediscipline doctor`, then commit.
 
 Want only the behaviour and no enforcement? `init --skills-only` copies
 `.agent/skills/` and nothing else. In Claude Code you can get the same as a
@@ -233,13 +238,14 @@ changing `git.protect_main_branch`, recompile.
 
 ## Command reference
 
-Every command below also works as `npx github:MokammelTanvir/VibeDiscipline <command>`.
+Run any of them as `npx vibediscipline <command>`.
 
 | Command | Does |
 |---|---|
 | `vibe init [dir]` | Install. Options: `--stack`, `--methodology`, `--skills-only`, `--dry-run`, `--force` |
 | `vibe upgrade [dir]` | Refresh skills, packs, adapters and scripts; keep your config, permissions and state |
 | `vibe doctor [dir]` | Check the installation and print the fix for each problem |
+| `vibe uninstall [dir]` | Remove VibeDiscipline, keeping your own files. Options: `--dry-run`, `--yes` |
 | `vibe check [--staged] [--task <id>]` | Run vibe check |
 | `vibe compile` | Recompile permissions and skill stubs |
 | `vibe methodology [value\|--show]` | Show or set the methodology |
@@ -252,7 +258,7 @@ The scripts in your project's `scripts/` do the same work without the CLI:
 ## Upgrade
 
 ```bash
-npx github:MokammelTanvir/VibeDiscipline upgrade
+npx vibediscipline upgrade
 ```
 
 It replaces `.agent/skills/`, `.agent/ecosystems/`, `.agent/adapters/` and
@@ -263,16 +269,19 @@ replaced: commit before upgrading so you can see the diff.
 
 ## Uninstall
 
-1. Delete `.agent/`, `.githooks/`, `.claude/hooks/vibe-*` and
-   `.claude/skills/vibe-*`.
-2. In `.claude/settings.json`, remove the generated `permissions` block and
-   the `vibe-guard` entry under `hooks`. Do this together with step 1, or
-   every shell command will report a missing hook.
-3. `git config --unset core.hooksPath`
-4. Remove the block between `<!-- vibediscipline:start -->` and
-   `<!-- vibediscipline:end -->` in `AGENTS.md`, and the pointer line in
-   `CLAUDE.md`.
-5. Delete the copied files in `scripts/` and `docs/PERMISSIONS.md`.
+```bash
+npx vibediscipline uninstall --dry-run   # see exactly what would go
+npx vibediscipline uninstall
+```
+
+It removes `.agent/`, the generated git hooks, the guard hook, the
+`vibe-*` skill stubs, the generated permissions and hook entry in
+`.claude/settings.json`, the copied scripts, `docs/PERMISSIONS.md`, the
+VibeDiscipline block in `AGENTS.md` and the pointer line in `CLAUDE.md`, and
+unsets `core.hooksPath`. Every file is checked for VibeDiscipline's own
+marker first: your own rules, settings, skills, scripts and task docs are
+kept and listed. `.agent/` goes with your `config.yml`, `permissions.yml`
+and `state.md`, so it asks before doing anything. Nothing is committed.
 
 ## Troubleshooting
 

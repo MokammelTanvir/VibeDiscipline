@@ -264,6 +264,186 @@ async function upgrade(args) {
   return code;
 }
 
+// ── new ─────────────────────────────────────────────────────────────
+// Creates a project with the framework's OWN scaffolder, then installs
+// VibeDiscipline on top. No framework code lives in this package, so a new
+// project is always whatever the framework ships today.
+const BACKENDS = {
+  laravel: { label: "Laravel", hint: "PHP · composer create-project", frontends: ["none", "react", "vue"] },
+  nextjs: { label: "Next.js", hint: "full-stack React · create-next-app", frontends: ["none"] },
+  django: { label: "Django", hint: "Python · django-admin startproject", frontends: ["none"] },
+  nestjs: { label: "NestJS", hint: "Node API · @nestjs/cli", frontends: ["none"] },
+  none: { label: "None", hint: "a frontend-only app", frontends: ["react", "vue", "angular"] },
+};
+const FRONTENDS = {
+  none: { label: "None", hint: "use what the backend ships" },
+  react: { label: "React", hint: "TypeScript" },
+  vue: { label: "Vue", hint: "TypeScript" },
+  angular: { label: "Angular", hint: "@angular/cli" },
+};
+
+// -> { needs, steps, stack, notes } or a string explaining why not.
+function recipe(backend, frontend, name) {
+  const b = BACKENDS[backend];
+  if (!b) return `unknown backend '${backend}'. Choose: ${Object.keys(BACKENDS).join(", ")}.`;
+  if (!FRONTENDS[frontend]) return `unknown frontend '${frontend}'. Choose: ${Object.keys(FRONTENDS).join(", ")}.`;
+  if (!b.frontends.includes(frontend)) {
+    return backend === "none"
+      ? "choose a frontend (react, vue or angular) or a backend."
+      : `${b.label} with ${FRONTENDS[frontend].label} is not offered: there is no official starter for it. ` +
+          `${b.label} goes with: ${b.frontends.join(", ")}. For a separate frontend, create it as its own project.`;
+  }
+  const step = (cmd, args, cwd) => ({ cmd, args, cwd });
+  switch (`${backend}+${frontend}`) {
+    case "laravel+none":
+      return { needs: ["php", "composer"], stack: "laravel", steps: [step("composer", ["create-project", "laravel/laravel", name])] };
+    case "laravel+react":
+      return { needs: ["php", "composer"], stack: "laravel", steps: [step("composer", ["create-project", "laravel/react-starter-kit", name])], notes: ["run `npm install` in the project for the React side"] };
+    case "laravel+vue":
+      return { needs: ["php", "composer"], stack: "laravel", steps: [step("composer", ["create-project", "laravel/vue-starter-kit", name])], notes: ["run `npm install` in the project for the Vue side"] };
+    case "nextjs+none":
+      return { needs: ["npx"], stack: "node", steps: [step("npx", ["--yes", "create-next-app@latest", name, "--yes"])] };
+    case "nestjs+none":
+      return { needs: ["npx"], stack: "node", steps: [step("npx", ["--yes", "@nestjs/cli@latest", "new", name, "--package-manager", "npm", "--skip-git"])] };
+    case "django+none":
+      return {
+        needs: ["python3"],
+        stack: "python",
+        steps: [
+          step("python3", ["-m", "venv", ".venv"], name),
+          step(path.join(".venv", "bin", "python"), ["-m", "pip", "install", "--quiet", "django"], name),
+          step(path.join(".venv", "bin", "django-admin"), ["startproject", "config", "."], name),
+        ],
+        mkdir: true,
+        files: { ".gitignore": ".venv/\n__pycache__/\n*.pyc\ndb.sqlite3\n.env\n", "requirements.txt": "django\n" },
+        notes: ["activate the environment with `source .venv/bin/activate`"],
+      };
+    case "none+react":
+      return { needs: ["npm"], stack: "node", steps: [step("npm", ["create", "--yes", "vite@latest", name, "--", "--template", "react-ts"])], notes: ["run `npm install` in the project"] };
+    case "none+vue":
+      return { needs: ["npm"], stack: "node", steps: [step("npm", ["create", "--yes", "vite@latest", name, "--", "--template", "vue-ts"])], notes: ["run `npm install` in the project"] };
+    case "none+angular":
+      return { needs: ["npx"], stack: "node", steps: [step("npx", ["--yes", "@angular/cli@latest", "new", name, "--defaults", "--skip-git"])] };
+    default:
+      return `no recipe for ${backend} + ${frontend}.`;
+  }
+}
+
+function ask(question, fallback) {
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    rl.question(`  ${c.bold(question)}${fallback ? c.dim(` (${fallback})`) : ""} `, (answer) => {
+      rl.close();
+      resolve(answer.trim() || fallback || "");
+    });
+  });
+}
+
+async function newProject(args) {
+  const value = (flag) => {
+    const i = args.findIndex((a) => a === flag || a.startsWith(flag + "="));
+    if (i === -1) return undefined;
+    return args[i].includes("=") ? args[i].split("=").slice(1).join("=") : args[i + 1];
+  };
+  const dry = args.includes("--dry-run");
+  const flagsWithValue = ["--backend", "--frontend", "--methodology"];
+  const positional = args.filter((a, i) => !a.startsWith("-") && !flagsWithValue.includes(args[i - 1]));
+  let name = positional[0];
+  let backend = value("--backend");
+  let frontend = value("--frontend");
+  let methodology = value("--methodology");
+  banner("new project");
+
+  if (INTERACTIVE && !args.includes("--yes") && !args.includes("-y")) {
+    if (!name) name = await ask("Project name?", "my-app");
+    if (!backend) {
+      backend = await select("Backend?", Object.entries(BACKENDS).map(([k, v]) => ({ label: v.label, value: k, hint: v.hint })));
+    }
+    if (!frontend) {
+      const choices = (BACKENDS[backend] || BACKENDS.none).frontends;
+      frontend = choices.length === 1
+        ? choices[0]
+        : await select("Frontend?", choices.map((k) => ({ label: FRONTENDS[k].label, value: k, hint: backend === "laravel" && k !== "none" ? "official Laravel starter kit" : FRONTENDS[k].hint })));
+    }
+    if (!methodology) {
+      methodology = await select("How should work be sequenced?", [
+        { label: "hybrid", value: "hybrid", hint: "recommended" },
+        { label: "agile", value: "agile", hint: "approval per increment" },
+        { label: "waterfall", value: "waterfall", hint: "approval after each phase" },
+      ]);
+    }
+    console.log("");
+  }
+  if (!name || (!backend && !frontend)) {
+    console.error("[vibe] usage: vibe new <name> --backend <b> [--frontend <f>] [--methodology <m>] [--dry-run]");
+    console.error(`[vibe]   backends:  ${Object.keys(BACKENDS).join(", ")}`);
+    console.error(`[vibe]   frontends: ${Object.keys(FRONTENDS).join(", ")}`);
+    return 2;
+  }
+  backend = backend || "none";
+  frontend = frontend || (backend === "none" ? "" : "none");
+  if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(name)) {
+    console.error(`[vibe] '${name}' is not a usable directory name (letters, digits, dot, dash, underscore).`);
+    return 2;
+  }
+  const plan = recipe(backend, frontend, name);
+  if (typeof plan === "string") {
+    console.error(`[vibe] ${plan}`);
+    return 2;
+  }
+  const target = path.resolve(name);
+  if (fs.existsSync(target) && fs.readdirSync(target).length) {
+    console.error(`[vibe] ${name} already exists and is not empty. To add VibeDiscipline to it: vibe init ${name}`);
+    return 2;
+  }
+  const missing = plan.needs.filter((tool) => spawnSync(tool, ["--version"], { stdio: "ignore" }).error);
+  if (missing.length && !dry) {
+    console.error(`[vibe] ${BACKENDS[backend].label === "None" ? FRONTENDS[frontend].label : BACKENDS[backend].label} needs ${missing.join(" and ")}, which is not installed.`);
+    return 1;
+  }
+
+  const show = (s) => `${s.cmd} ${s.args.join(" ")}${s.cwd ? `   (in ${s.cwd}/)` : ""}`;
+  if (dry) {
+    console.log(`${PRETTY ? "  " : ""}Would run:`);
+    for (const s of plan.steps) console.log(`  ${show(s)}`);
+    console.log(`  vibe init ${name} --stack ${plan.stack}${methodology ? ` --methodology ${methodology}` : ""}`);
+    return 0;
+  }
+
+  if (plan.mkdir) fs.mkdirSync(target, { recursive: true });
+  for (const s of plan.steps) {
+    console.log(`  ${MARK.arrow} ${c.dim(show(s))}`);
+    const code = run(s.cmd, s.args, s.cwd ? { cwd: path.resolve(s.cwd) } : {});
+    if (code !== 0) {
+      console.error(`\n[vibe] the scaffolder failed (exit ${code}). VibeDiscipline was not installed. Fix the error above and run again.`);
+      return code;
+    }
+  }
+  for (const [file, content] of Object.entries(plan.files || {})) {
+    if (!fs.existsSync(path.join(target, file))) fs.writeFileSync(path.join(target, file), content);
+  }
+  if (!fs.existsSync(path.join(target, ".git"))) spawnSync("git", ["init", "-q"], { cwd: target });
+
+  console.log(`\n  ${MARK.ok} ${[BACKENDS[backend].label, frontend && frontend !== "none" ? FRONTENDS[frontend].label : ""].filter((x) => x && x !== "None").join(" + ")} project created in ${c.cyan(name)}\n`);
+  const flags = ["--stack", plan.stack];
+  if (methodology) flags.push("--methodology", methodology);
+  const code = await runInstaller(name, flags);
+  if (code !== 0) return code;
+  if (PRETTY) {
+    panel("Next", [
+      `${c.cyan("1")}  ${c.bold(`cd ${name}`)}`,
+      ...(plan.notes || []).map((n) => `${MARK.dot}  ${c.dim(n)}`),
+      `${c.cyan("2")}  Open it in Claude Code and ${c.bold("accept the trust dialog")}`,
+      `${c.cyan("3")}  Ask your agent: ${c.green('"run the recon skill"')}`,
+      `${c.cyan("4")}  ${c.bold("vibe doctor")}, then make your first commit`,
+    ]);
+    console.log("");
+  } else {
+    console.log(`[vibe] next: cd ${name}${(plan.notes || []).map((n) => `; ${n}`).join("")}`);
+  }
+  return 0;
+}
+
 // ── doctor ──────────────────────────────────────────────────────────
 function doctor(args) {
   const [dir] = splitDir(args);
@@ -578,7 +758,11 @@ function help() {
       `${PRETTY ? "  " : ""}${c.bold("Usage:")} vibe <command> [options]`,
       "",
       `  ${c.bold("Set up")}`,
-      cmd("init [dir]", "install into a project (default: current directory)"),
+      cmd("new [name]", "create a new project with its framework's own scaffolder,"),
+      cmd("", "then install VibeDiscipline in it"),
+      opt("--backend <b>", "laravel | nextjs | django | nestjs | none"),
+      opt("--frontend <f>", "react | vue | angular | none"),
+      cmd("init [dir]", "install into an existing project (default: current directory)"),
       opt("--stack <s>", "auto | laravel | node | python | generic"),
       opt("--methodology <m>", "agile | waterfall | hybrid"),
       opt("--skills-only", "copy .agent/skills/ and nothing else"),
@@ -612,6 +796,8 @@ function help() {
 async function main() {
   const [cmd, ...args] = process.argv.slice(2);
   switch (cmd) {
+    case "new":
+      return newProject(args);
     case "init":
       return init(args);
     case "upgrade":

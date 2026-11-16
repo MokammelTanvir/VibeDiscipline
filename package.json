@@ -1,9 +1,10 @@
 {
   "name": "vibediscipline",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "An engineering discipline layer for AI coding agents: ceremony tiers, permissions compiled into enforcement, and an executable slop checker.",
   "bin": {
-    "vibe": "bin/vibe.cjs"
+    "vibe": "bin/vibe.cjs",
+    "vibediscipline": "bin/vibe.cjs"
   },
   "files": [
     "bin",
@@ -28,7 +29,7 @@
     "type": "git",
     "url": "git+https://github.com/MokammelTanvir/VibeDiscipline.git"
   },
-  "homepage": "https://github.com/MokammelTanvir/VibeDiscipline#readme",
+  "homepage": "https://mokammeltanvir.github.io/VibeDiscipline/",
   "keywords": [
     "ai-agents",
     "claude-code",

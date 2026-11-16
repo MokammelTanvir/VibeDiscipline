@@ -62,6 +62,26 @@ node "$V" upgrade >"$S/u.log" 2>&1;              ok "upgrade restores an edited 
 cd "$S/empty"
 node "$V" check >/dev/null 2>&1;                 ok "check outside a project exits 2" '[ $? -eq 2 ]'
 
+echo "== new (dry run only: the real scaffolders need the network)"
+cd "$S"
+node "$V" new >/dev/null 2>&1;                                  ok "new with nothing exits 2" '[ $? -eq 2 ]'
+node "$V" new app --backend cobol >/dev/null 2>&1;              ok "unknown backend exits 2" '[ $? -eq 2 ]'
+node "$V" new app --backend laravel --frontend angular >"$S/n0.log" 2>&1; ok "an unsupported pair is refused with the reason" '[ $? -eq 2 ] && grep -q "no official starter" "$S/n0.log"'
+node "$V" new "bad name" --backend django >/dev/null 2>&1;      ok "an unusable name exits 2" '[ $? -eq 2 ]'
+node "$V" new p --backend laravel >/dev/null 2>&1;              ok "a non-empty target is refused" '[ $? -eq 2 ]'
+plan() { node "$V" new app --dry-run "$@" 2>&1; }
+ok "laravel"          'plan --backend laravel | grep -q "composer create-project laravel/laravel app" && plan --backend laravel | grep -q "init app --stack laravel"'
+ok "laravel + react"  'plan --backend laravel --frontend react | grep -q "laravel/react-starter-kit app"'
+ok "laravel + vue"    'plan --backend laravel --frontend vue | grep -q "laravel/vue-starter-kit app"'
+ok "nextjs"           'plan --backend nextjs | grep -q "create-next-app@latest app" && plan --backend nextjs | grep -q "stack node"'
+ok "django"           'plan --backend django | grep -q "django-admin startproject config" && plan --backend django | grep -q "stack python"'
+ok "nestjs"           'plan --backend nestjs | grep -q "@nestjs/cli@latest new app"'
+ok "react only"       'plan --frontend react | grep -q "vite@latest app -- --template react-ts"'
+ok "vue only"         'plan --frontend vue | grep -q "template vue-ts"'
+ok "angular only"     'plan --frontend angular | grep -q "@angular/cli@latest new app"'
+ok "methodology is passed on" 'plan --backend django --methodology agile | grep -q "methodology agile"'
+ok "dry run creates nothing"  '[ ! -e "$S/app" ]'
+
 echo "== uninstall"
 mkdir -p "$S/u1" && cd "$S/u1" && git init -q && git config user.email t@t && git config user.name t
 echo "hello" > app.txt && git add -A && git commit -qm seed

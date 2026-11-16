@@ -2,7 +2,11 @@
 
 Notable changes to VibeDiscipline. Versions follow `.agent/VERSION`.
 
-## Unreleased
+## 0.2.0 — 2026-11-16
+
+One-command install on four stacks, a CLI, a guard for wrapped commands,
+and a user guide. Still a pre-release: see "Known limitations" in
+`docs/ROADMAP.md`.
 
 ### Added
 - `vibe` CLI (`bin/vibe.cjs`, zero dependencies), runnable without a clone:
@@ -27,6 +31,19 @@ Notable changes to VibeDiscipline. Versions follow `.agent/VERSION`.
   found, so no security skill was added. `evals/run/headless.sh` gained a
   baseline condition and now builds its repo with the real installer.
 - README: quickstart and an evidence table.
+
+- Second-model eval: the ambiguity gap replicates on Haiku (0/3 against
+  3/3) and closes on Sonnet (3/3 against 3/3).
+- vibe check: a manifest whose only change is its own version is no longer
+  reported as a dependency change.
+- Issue and pull request templates, a code of conduct, an FAQ in the guide.
+
+### Decided
+- New skills are added only where a trap shows a failure; the earlier list
+  of ten is no longer a commitment.
+- Hybrid at Tier L writes draft documents only where the docs tree already
+  exists; otherwise it outlines them and writes them after approval.
+- TRAP-06 is retired.
 
 ### Fixed
 - A new install no longer inherits this repository's own `config.yml`. It

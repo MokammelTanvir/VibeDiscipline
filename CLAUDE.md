@@ -8,7 +8,7 @@ Do not duplicate its content here; edit AGENTS.md instead.
 
 Live state: `.agent/state.md` · tasks: `docs/tasks/BOARD.md` · full design:
 `VibeDiscipline-Full-Plan.md` (gitignored, §45 roadmap, §45A readiness).
-Overall ≈ 45% of v1.0 (v0.1 100%, v0.2 ~45%, v0.3 ~30%, v1.0 ~12%). Repo is PUBLIC; v0.1.0 tagged and released (pre-release) 2026-11-15.
+Overall ≈ 45% of v1.0 (v0.1 100%, v0.2 ~45%, v0.3 ~30%, v1.0 ~12%). Repo is PUBLIC; v0.2.0 tagged and released (pre-release) 2026-11-16.
 
 ## Done
 - v0.1 core: AGENTS.md (72 lines), 6 skills (recon, planning, implement,
@@ -41,18 +41,27 @@ Overall ≈ 45% of v1.0 (v0.1 100%, v0.2 ~45%, v0.3 ~30%, v1.0 ~12%). Repo is PU
   was written. Third eval in a row where a classic code-level failure does
   not reproduce on haiku; the measured gains are process and enforcement.
 
-## A — Publishable v0.1.0 (what is left)
-8. Decide TRAP-06 (harden or retire). Decide for hybrid Tier L whether the
-   document set is written or only proposed before approval (TRAP-07 finding).
-9. Repo topics (owner confirms).
+- 2026-11-16, v0.2.0: second-model eval (ambiguity gap replicates on Haiku
+  0/3 vs 3/3, closes on Sonnet 3/3 vs 3/3), issue/PR templates, code of
+  conduct, FAQ, repo topics. Decisions taken on the owner's "do it all":
+  skills are evidence-gated (the list of ten is dropped), hybrid Tier L
+  drafts documents only where the docs tree exists, TRAP-06 retired.
+
+## A — What only the owner can do before a public launch
+- One interactive Claude Code session on a real project after install:
+  trust dialog, allow-list, confirm prompt, tier line. All evidence so far
+  is headless.
+- Use the node and python presets on a real project and report wrong lines.
+- `npm login`, check the name `vibediscipline`, `npm publish`.
+- A demo GIF or video for the README; then drop the pre-release flag.
 Note: `.agent/stack.lock.yml` is deliberately absent here; a template repo
 must not ship its own detected stack. `recon` writes it per project.
 
 ## B — v0.2 Broaden (the bulk)
 Rule for every skill and adapter below (CONTRIBUTING.md): it ships with a
 trap that shows the failure it fixes. Do not write them in bulk.
-12. Skills, failure-driven order: testing, security, debug, then database,
-    refactor, dependency, discovery, product, architecture, ui-ux (0/10).
+12. Skills: none planned. Add one only when a trap shows a failure the
+    existing six do not prevent (candidates: testing, debug, database, ui-ux).
 13. Templates: API-SPEC, UI-UX (with the ui-ux and architecture skills).
 14. JavaScript pack + Next.js adapter (second stack proves universality);
     then python, react, vue, nestjs, django.
@@ -97,9 +106,6 @@ the grader is a different model from the subject, reading blind; every
 new or changed skill is re-run on Sonnet before it counts as done.
 
 ## Open decisions (owner)
-- The 10-skill list in step 12: evidence so far does not support most of
-  it. Proposal: keep `testing` and `debug` only if a trap shows a failure;
-  spend v0.2 on enforcement, ambiguity and approval handling instead.
 - Methodology default when unset (assumed hybrid, no forced prompt).
 - Stop-and-ask vs finish-the-task in non-interactive runs (TRAP-01/04 cost).
 - Publish the full plan, or only a trimmed ROADMAP.md.

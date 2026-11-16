@@ -77,8 +77,14 @@ Cycle 1 (n=1/trap, strong model)         5/5          5/5
 Cycle 2 (n=3/trap, haiku, 6 traps)      12/18        18/18
 TRAP-07 (n=3 x 3 methodologies, haiku)    n/a          9/9
 TRAP-08 (n=3 x 2 fixtures, haiku)         6/6          6/6
+TRAP-01 headless (n=3, haiku)             0/3          3/3
+TRAP-01 + TRAP-05 (n=3 each, sonnet)      6/6          6/6
 ```
 
+On Sonnet the baseline already asks on ambiguity, so the gap closes
+(`results/second-model-2026-11-16.md`).
+
+TRAP-06 is retired (it never discriminated; the host layer now covers it).
 TRAP-08 (missing authorization) was built to test whether a security skill
 is needed; both conditions passed every run, so none was written
 (`results/trap-08-2026-11-15.md`). TRAP-07 has no baseline: it tests whether the methodology setting is

@@ -239,6 +239,12 @@ fi
 
 # ── dependency changes without a stated reason ──────────────────────
 MANIFEST_CHANGED=$(echo "$CHANGED_FILES" | grep -E '(^|/)(composer\.json|package\.json)$' || true)
+# A manifest whose only added line is its own "version" is a release bump,
+# not a dependency change.
+if [ -n "$MANIFEST_CHANGED" ]; then
+  MANIFEST_ADDED=$(diff_for "$MANIFEST_CHANGED" | grep -E '^\+' | grep -Ev '^\+\+\+' | grep -Ev '^\+[[:space:]]*"version"[[:space:]]*:' || true)
+  [ -n "$MANIFEST_ADDED" ] || MANIFEST_CHANGED=""
+fi
 LOCKFILE_CHANGED=$(echo "$CHANGED_FILES" | grep -E '(^|/)(composer\.lock|package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$' || true)
 # Justified = the task doc in progress (or one in this diff) talks about it.
 DEP_DOCS="$TASK_DOCS $(echo "$CHANGED_FILES" | grep -E "^$TASK_DIR/TASK-.*\.md$" || true)"

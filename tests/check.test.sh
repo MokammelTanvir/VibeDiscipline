@@ -93,6 +93,14 @@ check; expect "console.log in app js and breakpoint() in python are reported" 0 
   && echo "  ok   scripts/ is exempt from console.log; python breakpoint reported" \
   || { echo "  FAIL per-language leftovers"; echo "$OUT"; FAILED=$((FAILED + 1)); }
 
+git add -A && git commit -qm leftovers >/dev/null 2>&1
+printf 'check:\n  fail_on: [dependency]\n' > .agent/config.yml
+printf '{\n  "version": "1.0.0",\n  "a": 1\n}\n' > package.json; git add -A; git commit -qm pkg >/dev/null 2>&1
+printf '{\n  "version": "1.1.0",\n  "a": 1\n}\n' > package.json
+check; expect "a version-only bump is not a dependency change" 0 "^PASS  dependency"
+printf '{\n  "version": "1.1.0",\n  "a": 1,\n  "dependencies": { "left-pad": "1.0.0" }\n}\n' > package.json
+check; expect "an added dependency still fails" 1 "^FAIL  dependency"
+
 echo
 [ "$FAILED" -eq 0 ] && echo "check: all scenarios pass" || echo "check: $FAILED scenario(s) FAILED"
 exit "$FAILED"

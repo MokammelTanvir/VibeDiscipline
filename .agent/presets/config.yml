@@ -1,0 +1,32 @@
+# VibeDiscipline project configuration
+version: 1
+# The permission mode (auto | guided | strict) lives in .agent/permissions.yml.
+
+# stack: detected by the recon skill into .agent/stack.lock.yml.
+# Add a `stack:` block here only to override what recon finds.
+
+workflow:
+  methodology: hybrid         # agile | waterfall | hybrid — see .agent/skills/_shared/methodology.md
+  # What each flag relaxes when false: .agent/skills/_shared/config-resolution.md
+  require_plan: true         # Tier M+ requires a task doc before implementing
+  require_tests: true
+  require_review: true
+  require_security_review: true
+  approval_gate_tier: M        # M | L — lowest tier that requires recorded human approval
+
+commit:
+  attribution_trailer: false   # set true to add an AI co-author trailer to commits
+
+git:
+  # true: the pre-push hook refuses a direct push to main/master, for
+  # everyone (a hook cannot tell an agent from a person). Suits a PR-based
+  # team. false: direct pushes are allowed; an agent's `git push` still
+  # needs confirmation through permissions.yml.
+  protect_main_branch: false
+
+check:
+  # vibe check (scripts/check.sh). A FAIL blocks the commit; a WARN is printed.
+  # Checks: scope, secrets, leftovers, dependency, tests.
+  fail_on: [secrets, leftovers, scope]
+  warn_on: [dependency, tests]
+  ignore: []                   # paths left out of every check, e.g. ["legacy/**"]

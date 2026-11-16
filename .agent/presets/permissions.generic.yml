@@ -1,0 +1,82 @@
+# VibeDiscipline permission policy — source of truth. Preset: generic (no stack detected).
+# Compiled by scripts/compile-permissions.cjs into:
+#   .claude/settings.json  ·  .githooks/pre-commit and pre-push  ·  docs/PERMISSIONS.md
+# Do not hand-edit the generated targets — edit this file and recompile.
+# No stack was recognised, so only git and the universal rules are here.
+# Add your project's test, lint and build commands under `allow`, and its
+# install, migrate and deploy commands under `confirm`.
+
+version: 1
+# auto: allow-list runs freely, confirm-list prompts. guided: every command
+# and write prompts. strict: reads prompt too. Deny wins in every mode.
+mode: auto        # auto | guided | strict
+
+commands:
+  allow:
+    - "git status"
+    - "git diff*"
+    - "git log*"
+    - "git branch*"
+    - "git show*"
+    - "make test*"
+    - "make lint*"
+    - "make check*"
+
+  confirm:
+    - "make install*"
+    - "make deploy*"
+    - "git push*"
+    - "git rebase*"
+    - "git merge*"
+    - "docker*"
+    - "*deploy*"
+
+  deny:
+    - "git push --force*"
+    - "git push -f*"
+    - "git reset --hard*"
+    - "git clean -fd*"
+    - "rm -rf *"
+    - "*DROP DATABASE*"
+    - "*DROP TABLE*"
+    - "*TRUNCATE*"
+    - "curl * | sh"
+    - "curl * | bash"
+    - "chmod 777*"
+    - "*--no-verify*"
+
+files:
+  allow:
+    - "src/**"
+    - "app/**"
+    - "lib/**"
+    - "tests/**"
+    - "test/**"
+    - "docs/**"
+
+  confirm:
+    - ".env*"
+    - "Makefile"
+    - "docker-compose*.yml"
+    - "Dockerfile*"
+    - ".github/workflows/**"
+
+  deny:
+    - ".git/**"
+    - "**/*.pem"
+    - "**/*.key"
+    - "**/*.p12"
+    - "**/id_rsa*"
+    - "**/.ssh/**"
+
+network:
+  allow: ["read-only fetch of public documentation"]
+  confirm: ["any request that mutates external state"]
+  deny: ["sending repository contents to third-party services"]
+
+escalation:
+  on_deny: >
+    Stop. Explain what was attempted, why it is denied, and what the
+    human can do instead. Never attempt an equivalent workaround.
+  on_confirm_timeout: stop
+  approval_scope: single-invocation

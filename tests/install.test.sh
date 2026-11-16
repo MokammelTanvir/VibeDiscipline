@@ -17,6 +17,9 @@ ok "AGENTS.md created, no markers"  '[ -f AGENTS.md ] && ! grep -q vibedisciplin
 ok "CLAUDE.md is the 2-line pointer" '[ "$(wc -l < CLAUDE.md | tr -d " ")" = 2 ]'
 ok "config has no stack block"      '! grep -qE "^stack:|laravel" .agent/config.yml'
 ok "config still has workflow+check" 'grep -q "^workflow:" .agent/config.yml && grep -q "^check:" .agent/config.yml'
+ok "config is the clean template"   'grep -q "warn_on: \[dependency, tests\]" .agent/config.yml && ! grep -q "evals/fixtures" .agent/config.yml'
+git add -A >/dev/null 2>&1; echo "{}" > package.json; git add package.json
+ok "first commit of a manifest is not blocked" 'git -c user.email=t@t -c user.name=t commit -qm first >/dev/null 2>&1'
 ok "methodology agile"              'grep -q "methodology: agile" .agent/config.yml'
 ok "VERSION written, governed"      'grep -q "tier: governed" .agent/VERSION'
 ok "settings compiled"              'grep -q GENERATED .claude/settings.json'
@@ -63,6 +66,41 @@ echo "== E dry run"
 mkdir -p "$S/e" && "$I" "$S/e" --dry-run >"$S/e.log" 2>&1; echo "  exit=$?"
 ok "nothing written"                '[ -z "$(ls -A "$S/e")" ]'
 ok "prints would-lines"             'grep -q "would: copy .agent/skills/planning/SKILL.md" "$S/e.log"'
+
+echo "== G stack presets"
+for pair in "package.json:node" "pyproject.toml:python" "artisan:laravel" "README.md:generic"; do
+  marker="${pair%%:*}"; want="${pair##*:}"
+  mkdir -p "$S/g-$want" && cd "$S/g-$want" && git init -q && touch "$marker"
+  "$I" "$S/g-$want" >"$S/g-$want.log" 2>&1
+  ok "$marker -> $want preset, compiled" 'grep -q "permissions preset: $want (detected)" "$S/g-$want.log" && grep -q GENERATED .claude/settings.json'
+  ok "$want keeps the universal deny list" 'grep -q "git reset --hard" .claude/hooks/vibe-policy.json && grep -q "id_rsa" .claude/settings.json'
+  ok "$want: presets directory not copied" '[ ! -e .agent/presets ]'
+done
+ok "node preset has npm, not artisan" 'grep -q "npm test" "$S/g-node/.agent/permissions.yml" && ! grep -q artisan "$S/g-node/.agent/permissions.yml"'
+ok "python preset has pytest"          'grep -q "pytest" "$S/g-python/.agent/permissions.yml"'
+mkdir -p "$S/g-forced" && touch "$S/g-forced/package.json" && "$I" "$S/g-forced" --stack python >"$S/g-forced.log" 2>&1
+ok "--stack overrides detection"       'grep -q "permissions preset: python$" "$S/g-forced.log" && grep -q pytest "$S/g-forced/.agent/permissions.yml"'
+"$I" "$S/e" --stack cobol >/dev/null 2>&1; ok "unknown stack exits 2" '[ $? -eq 2 ]'
+
+echo "== H upgrade"
+cd "$S/a"
+echo "# local edit" >> .agent/skills/git/SKILL.md
+echo "# my rule" >> .agent/permissions.yml
+echo "mine: true" >> .agent/config.yml
+echo "working notes" > .agent/state.md
+"$I" "$S/a" --upgrade >"$S/h.log" 2>&1; echo "  exit=$?"
+ok "skill restored from source"        'cmp -s .agent/skills/git/SKILL.md "$REPO/.agent/skills/git/SKILL.md"'
+ok "updated file is listed"            'grep -q ".agent/skills/git/SKILL.md" "$S/h.log"'
+ok "permissions.yml kept"              'grep -q "# my rule" .agent/permissions.yml'
+ok "config.yml kept"                   'grep -q "mine: true" .agent/config.yml && grep -q "methodology: agile" .agent/config.yml'
+ok "state.md kept"                     'grep -q "working notes" .agent/state.md'
+ok "VERSION records the upgrade"       'grep -q "^upgraded: " .agent/VERSION && grep -q "^installed: " .agent/VERSION'
+"$I" "$S/a" --upgrade >"$S/h2.log" 2>&1
+ok "second upgrade: already up to date" 'grep -q "already up to date" "$S/h2.log"'
+cd "$S/c" && sed -i.bak 's/^## Ceremony tiers.*/## OLD HEADING/' AGENTS.md && rm AGENTS.md.bak
+"$I" "$S/c" --upgrade >"$S/h3.log" 2>&1
+ok "AGENTS.md block refreshed, theirs kept" '! grep -q "OLD HEADING" AGENTS.md && grep -q "Use tabs." AGENTS.md && [ "$(grep -c "vibediscipline:start" AGENTS.md)" = 1 ]'
+mkdir -p "$S/h-none" && "$I" "$S/h-none" --upgrade >/dev/null 2>&1; ok "upgrade without an install exits 2" '[ $? -eq 2 ]'
 
 echo "== F bad input"
 "$I" >/dev/null 2>&1; ok "no target exits 2" '[ $? -eq 2 ]'

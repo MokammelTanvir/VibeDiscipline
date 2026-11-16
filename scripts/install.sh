@@ -7,7 +7,12 @@
 #
 # Options:
 #   --skills-only         copy .agent/skills/ and nothing else
+#   --stack <s>           auto | laravel | node | python | generic (default: auto)
+#                         picks the permissions.yml preset for a new install
 #   --methodology <m>     agile | waterfall | hybrid (default: hybrid)
+#   --upgrade             refresh skills, packs, adapters and scripts in a
+#                         project that already has VibeDiscipline; keeps
+#                         config.yml, permissions.yml and state.md
 #   --force               overwrite files that already exist in the target
 #   --dry-run             print what would happen, change nothing
 #
@@ -16,15 +21,18 @@
 # stack.lock.yml.
 set -euo pipefail
 
-usage() { sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'; }
 
 SRC="$(cd "$(dirname "$0")/.." && pwd)"
-TARGET=""; SKILLS_ONLY=0; FORCE=0; DRY=0; METH=""
+TARGET=""; SKILLS_ONLY=0; FORCE=0; DRY=0; METH=""; STACK="auto"; UPGRADE=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --skills-only) SKILLS_ONLY=1 ;;
     --force) FORCE=1 ;;
     --dry-run) DRY=1 ;;
+    --upgrade) UPGRADE=1 ;;
+    --stack) STACK="${2:-}"; [ $# -gt 1 ] && shift ;;
+    --stack=*) STACK="${1#--stack=}" ;;
     --methodology) METH="${2:-}"; [ $# -gt 1 ] && shift ;;
     --methodology=*) METH="${1#--methodology=}" ;;
     -h|--help) usage; exit 0 ;;
@@ -38,6 +46,11 @@ done
 TARGET="$(cd "$TARGET" && pwd)"
 [ "$TARGET" != "$SRC" ] || { echo "[vibe] target is this VibeDiscipline clone itself" >&2; exit 2; }
 case "$METH" in ""|agile|waterfall|hybrid) ;; *) echo "[vibe] unknown methodology '$METH'" >&2; exit 2 ;; esac
+case "$STACK" in auto|laravel|node|python|generic) ;; *) echo "[vibe] unknown stack '$STACK'" >&2; exit 2 ;; esac
+if [ "$UPGRADE" -eq 1 ] && [ ! -d "$TARGET/.agent/skills" ]; then
+  echo "[vibe] nothing to upgrade: $TARGET has no .agent/skills. Run without --upgrade to install." >&2
+  exit 2
+fi
 
 MARK_START="<!-- vibediscipline:start -->"
 MARK_END="<!-- vibediscipline:end -->"
@@ -47,7 +60,7 @@ run() { if [ "$DRY" -eq 1 ]; then echo "  would: $*"; else "$@"; fi; }
 copy_tree() { # <relative dir>
   local f
   (cd "$SRC" && find "$1" -type f ! -name '.DS_Store') | sort | while IFS= read -r f; do
-    case "$f" in .agent/state.md|.agent/stack.lock.yml|.agent/VERSION) continue ;; esac
+    case "$f" in .agent/state.md|.agent/stack.lock.yml|.agent/VERSION|.agent/presets/*) continue ;; esac
     copy_file "$f"
   done
 }
@@ -58,10 +71,20 @@ say "installing into $TARGET$([ "$DRY" -eq 1 ] && echo ' (dry run)')"
 # copy_file <relative path>: skips a file the target already has, unless
 # --force. It runs in a subshell under copy_tree's pipe, so skips are
 # collected in a file.
-SKIPLOG="$(mktemp)"; trap 'rm -f "$SKIPLOG"' EXIT
+SKIPLOG="$(mktemp)"; UPDLOG="$(mktemp)"; trap 'rm -f "$SKIPLOG" "$UPDLOG"' EXIT
+# What VibeDiscipline owns and an upgrade may replace. Everything else an
+# existing project has (config, permissions, state) is the project's.
+owned() { case "$1" in .agent/skills/*|.agent/ecosystems/*|.agent/adapters/*|scripts/*) return 0 ;; esac; return 1; }
 copy_file() {
   local rel="$1" dest="$TARGET/$1"
-  if [ -e "$dest" ] && [ "$FORCE" -eq 0 ]; then echo "  $rel" >>"$SKIPLOG"; return 0; fi
+  if [ -e "$dest" ]; then
+    if [ "$FORCE" -eq 1 ] || { [ "$UPGRADE" -eq 1 ] && owned "$rel"; }; then
+      cmp -s "$SRC/$rel" "$dest" && return 0
+      echo "  $rel" >>"$UPDLOG"
+    else
+      echo "  $rel" >>"$SKIPLOG"; return 0
+    fi
+  fi
   if [ "$DRY" -eq 1 ]; then echo "  would: copy $rel"; return 0; fi
   mkdir -p "$(dirname "$dest")"
   cp "$SRC/$rel" "$dest"
@@ -81,21 +104,36 @@ for s in check.sh compile-permissions.cjs vibe-guard.cjs bridge-claude.cjs set-m
 done
 [ "$DRY" -eq 1 ] || chmod +x "$TARGET"/scripts/check.sh "$TARGET"/scripts/validate-portability.sh 2>/dev/null || true
 
-# This repo's own stack must not travel: recon detects the target's stack.
-CFG="$TARGET/.agent/config.yml"
-if [ "$DRY" -eq 0 ] && [ -f "$CFG" ] && ! grep -qxF '  .agent/config.yml' "$SKIPLOG" && grep -q '^stack:' "$CFG"; then
-  awk '
-    /^stack:/ { print "# stack: detected by the recon skill into .agent/stack.lock.yml."; print "# Add a `stack:` block here only to override what recon finds."; skip = 1; next }
-    skip && /^[^[:space:]#]/ { skip = 0 }
-    skip && /^[[:space:]]*$/ { skip = 0 }
-    !skip
-  ' "$CFG" > "$CFG.tmp" && mv "$CFG.tmp" "$CFG"
+# ── permissions preset for the target's stack (new installs only) ───
+detect_stack() {
+  if [ -f "$TARGET/artisan" ] || [ -f "$TARGET/composer.json" ]; then echo laravel
+  elif [ -f "$TARGET/pyproject.toml" ] || [ -f "$TARGET/manage.py" ] || [ -f "$TARGET/setup.py" ] || ls "$TARGET"/requirements*.txt >/dev/null 2>&1; then echo python
+  elif [ -f "$TARGET/package.json" ]; then echo node
+  else echo generic; fi
+}
+if grep -qxF '  .agent/permissions.yml' "$SKIPLOG"; then
+  say "permissions.yml: yours was kept"
+else
+  if [ "$STACK" = "auto" ]; then STACK="$(detect_stack) (detected)"; fi
+  PRESET="${STACK%% *}"
+  if [ "$PRESET" != "laravel" ] && [ "$DRY" -eq 0 ]; then
+    cp "$SRC/.agent/presets/permissions.$PRESET.yml" "$TARGET/.agent/permissions.yml"
+  fi
+  say "permissions preset: $STACK"
+fi
+
+# This repo's own config (its stack, its stricter check settings, its
+# ignore list) must not travel: a new install gets the clean template.
+if ! grep -qxF '  .agent/config.yml' "$SKIPLOG" && [ "$DRY" -eq 0 ]; then
+  cp "$SRC/.agent/presets/config.yml" "$TARGET/.agent/config.yml"
 fi
 
 if [ "$DRY" -eq 1 ]; then
   echo "  would: write .agent/VERSION"
 else
-  printf '%s\ntier: governed\ninstalled: %s\n' "$(head -1 "$SRC/.agent/VERSION")" "$(date +%Y-%m-%d)" > "$TARGET/.agent/VERSION"
+  WAS="$(sed -n 's/^installed: //p' "$TARGET/.agent/VERSION" 2>/dev/null | head -1 || true)"
+  printf '%s\ntier: governed\ninstalled: %s\n' "$(head -1 "$SRC/.agent/VERSION")" "${WAS:-$(date +%Y-%m-%d)}" > "$TARGET/.agent/VERSION"
+  if [ "$UPGRADE" -eq 1 ]; then echo "upgraded: $(date +%Y-%m-%d)" >> "$TARGET/.agent/VERSION"; fi
 fi
 
 # ── AGENTS.md: ours above theirs, between markers, once ─────────────
@@ -103,6 +141,18 @@ A="$TARGET/AGENTS.md"
 if [ ! -f "$A" ]; then
   run cp "$SRC/AGENTS.md" "$A"
   say "AGENTS.md created"
+elif [ "$UPGRADE" -eq 1 ] && grep -qF "$MARK_START" "$A" && grep -qF "$MARK_END" "$A"; then
+  # Replace only what sits between the markers; the project's own text stays.
+  if [ "$DRY" -eq 1 ]; then echo "  would: refresh the VibeDiscipline block in AGENTS.md"; else
+    awk -v s="$MARK_START" -v e="$MARK_END" -v f="$SRC/AGENTS.md" '
+      $0 == s { print; while ((getline line < f) > 0) print line; skip = 1; next }
+      $0 == e { skip = 0 }
+      !skip' "$A" > "$A.tmp" && mv "$A.tmp" "$A"
+    say "AGENTS.md: VibeDiscipline block refreshed, your content kept"
+  fi
+elif [ "$UPGRADE" -eq 1 ] && ! cmp -s "$SRC/AGENTS.md" "$A"; then
+  say "AGENTS.md differs from the current version and has no markers — left alone."
+  say "  compare it with $SRC/AGENTS.md and merge by hand"
 elif grep -qF "$MARK_START" "$A" || grep -q 'This project uses \*\*VibeDiscipline\*\*' "$A"; then
   say "AGENTS.md already contains VibeDiscipline — left alone"
 elif [ "$DRY" -eq 1 ]; then
@@ -157,6 +207,16 @@ if command -v node >/dev/null 2>&1; then
   fi
 fi
 
+if [ -s "$UPDLOG" ]; then
+  say "updated (your local edits to these, if any, were replaced):"
+  cat "$UPDLOG"
+fi
+if [ "$UPGRADE" -eq 1 ]; then
+  [ -s "$UPDLOG" ] || say "already up to date"
+  say "kept as yours: .agent/config.yml, .agent/permissions.yml, .agent/state.md"
+  say "upgrade done: version $(head -1 "$SRC/.agent/VERSION")"
+  exit 0
+fi
 if [ -s "$SKIPLOG" ]; then
   say "kept existing files (use --force to overwrite):"
   cat "$SKIPLOG"
@@ -165,8 +225,8 @@ fi
 cat <<EOF
 
 [vibe] done. Next:
-  1. Edit .agent/permissions.yml for your stack (the shipped command lists
-     are Laravel's), then re-run: node scripts/compile-permissions.cjs
+  1. Read .agent/permissions.yml and add your project's own commands and
+     paths, then re-run: node scripts/compile-permissions.cjs
   2. Open the project in Claude Code once and accept the trust dialog;
      until then the compiled allow-list is ignored.
   3. Ask your agent to run the recon skill. It writes .agent/stack.lock.yml.

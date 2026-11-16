@@ -16,6 +16,7 @@ there, and how to configure, upgrade and remove it.
 - [Upgrade](#upgrade)
 - [Uninstall](#uninstall)
 - [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
 
 ## Requirements
 
@@ -304,3 +305,36 @@ from your own pre-commit hook to have both.
 
 **Something else.** Open an issue:
 https://github.com/MokammelTanvir/VibeDiscipline/issues
+
+## FAQ
+
+**Does it work with Cursor, Copilot, Codex or Windsurf?** The skills and
+tiers do, for any tool that reads `AGENTS.md`, and so do the git hooks.
+The compiled permissions, the guard hook and the native skills are Claude
+Code only for now.
+
+**Does it slow the agent down?** For a typo or a small fix, no: those tiers
+have no plan and no document. For a feature it adds one stop, where you
+approve a plan. That stop is the point.
+
+**Will it make my agent write better code?** Mostly it changes process, not
+code. In our tests a current model already avoided the classic code-level
+mistakes on its own. What changed was that it asked when a request was
+ambiguous, added a regression test with a bug fix, stopped for approval,
+and could not run denied commands. The numbers and their limits are in the
+README.
+
+**Is my code sent anywhere?** No. Everything is files and local scripts in
+your repository. There is no service, no telemetry and no dependency.
+
+**Can I change the rules?** Yes. `AGENTS.md`, the skills and
+`permissions.yml` are plain files in your project. An upgrade replaces the
+skills, so keep your own rules in `AGENTS.md` below the VibeDiscipline block
+or in `config.yml` and `permissions.yml`, which an upgrade never touches.
+
+**My stack is not Laravel, Node or Python.** Install with the generic
+preset, add your commands to `permissions.yml`, and let the recon skill
+detect the rest. The skills do not depend on a stack.
+
+**How much context does it use?** `AGENTS.md` is about 70 lines and is the
+only file loaded every session. Skills are read when the task calls for one.

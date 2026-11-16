@@ -8,7 +8,7 @@ change, permissions compiled into real enforcement (not just prose an
 agent can drift away from), framework detection that works on any stack
 from day one, and an executable slop checker.
 
-**Status: v0.1.0 pre-release. One stack (Laravel) and one host (Claude
+**Status: v0.2.0 pre-release. One stack (Laravel) and one host (Claude
 Code) are covered in depth; the skills themselves are stack-neutral.**
 Roadmap, current status and known limitations:
 [`docs/ROADMAP.md`](./docs/ROADMAP.md).
@@ -42,18 +42,21 @@ update it with `... upgrade`. Removing it is five steps in the
 
 | Measured | Without | With | Source |
 |---|---|---|---|
-| Six traps, stated pass criteria (haiku, n=3) | 12/18 | 18/18 | [cycle 2](./evals/results/v0.1-cycle-2.md) |
-| Asked instead of building on an ambiguous request | 0/3 | 3/3 | cycle 2, TRAP-01 |
-| Regression test added with a bug fix | 0/3 | 3/3 | cycle 2, TRAP-02 |
+| Six traps, stated pass criteria (Haiku, n=3) | 12/18 | 18/18 | [cycle 2](./evals/results/v0.1-cycle-2.md) |
+| Asked instead of building on an ambiguous request, Haiku | 0/3 | 3/3 | [second model](./evals/results/second-model-2026-11-16.md) |
+| The same, Sonnet | 3/3 | 3/3 | second model |
+| Regression test added with a bug fix, Haiku | 0/3 | 3/3 | cycle 2, TRAP-02 |
 | Denied command hidden in `bash -c` blocked | no | yes | [enforcement](./evals/results/enforcement-2026-11-15.md) |
 | Work sequenced per the chosen methodology at Tier L | n/a | 9/9 | [TRAP-07](./evals/results/trap-07-2026-11-15.md) |
 | Authorization check on a new endpoint | 6/6 | 6/6 | [TRAP-08](./evals/results/trap-08-2026-11-15.md) |
 
-Read it as indicative, not proven: small samples, one model, graded by the
-author. The gains are in process and enforcement. On classic code-level
-mistakes a current model does about as well on its own, and the cost of
-the process is real: an agent that stops to ask delivers nothing in an
-unattended run.
+What to take from it: on a weaker model VibeDiscipline closes a real gap in
+behaviour. A stronger model already asks before guessing, so there the
+value is what does not depend on the model: rules the host enforces, a
+stated tier, a recorded approval, and a chosen methodology. On classic
+code-level mistakes a current model does as well on its own. The process
+has a cost too: an agent that stops to ask delivers nothing in an
+unattended run. Samples are small (n=3) and graded by the author.
 
 ## The three things that make this different
 
@@ -124,7 +127,7 @@ node scripts/set-methodology.cjs --show
 It writes `workflow.methodology` in `.agent/config.yml`. Details:
 `.agent/skills/_shared/methodology.md`.
 
-## What's in v0.1
+## What's in the box
 
 ```
 AGENTS.md                    the constitution (≤100 lines)
@@ -148,9 +151,10 @@ scripts/validate-portability.sh
 evals/                        trap tasks proving the system changes agent behavior
 ```
 
-Not yet built (see [`docs/ROADMAP.md`](./docs/ROADMAP.md)): the UI/UX skill, additional adapters, the `vibe` CLI, and the
-template-repo bootstrap. v0.1 is deliberately narrow and deep — one real
-stack working well beats twenty adapters that are never tested.
+Not yet built (see [`docs/ROADMAP.md`](./docs/ROADMAP.md)): framework
+knowledge beyond Laravel, enforcement for tools other than Claude Code,
+native Windows support, and an npm release. One real stack working well
+beats twenty adapters that are never tested.
 
 ## Contributing
 

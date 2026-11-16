@@ -8,7 +8,7 @@ Do not duplicate its content here; edit AGENTS.md instead.
 
 Live state: `.agent/state.md` · tasks: `docs/tasks/BOARD.md` · full design:
 `VibeDiscipline-Full-Plan.md` (gitignored, §45 roadmap, §45A readiness).
-Overall ≈ 45% of v1.0 (v0.1 100%, v0.2 ~45%, v0.3 ~30%, v1.0 ~12%). Repo is PUBLIC; v0.2.1 tagged, released (pre-release) and on npm, 2026-11-16.
+Overall ≈ 45% of v1.0 (v0.1 100%, v0.2 ~45%, v0.3 ~30%, v1.0 ~12%). Repo is PUBLIC; v0.3.0 tagged 2026-11-16; npm has 0.2.1 until the owner publishes. Site: https://mokammeltanvir.github.io/VibeDiscipline/
 
 ## Done
 - v0.1 core: AGENTS.md (72 lines), 6 skills (recon, planning, implement,
@@ -51,7 +51,12 @@ Overall ≈ 45% of v1.0 (v0.1 100%, v0.2 ~45%, v0.3 ~30%, v1.0 ~12%). Repo is PU
   `doctor` compares files instead of trusting VERSION, coloured interactive
   CLI, `vibe uninstall`, published to npm as `vibediscipline`.
 
+- 2026-11-16, v0.3.0 (TASK-006): `vibe new` runs the framework's own
+  scaffolder then installs (9 recipes, all run for real), second bin name
+  `vibediscipline`, landing page `docs/index.html`.
+
 ## A — What only the owner can do before a public launch
+- `npm publish` each release (npm asks for a one-time password).
 - One interactive Claude Code session on a real project after install:
   trust dialog, allow-list, confirm prompt, tier line. All evidence so far
   is headless.

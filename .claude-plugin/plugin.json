@@ -1,6 +1,6 @@
 {
   "name": "vibediscipline",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Engineering discipline skills for AI coding agents: ceremony tiers that scale process to the size of the change, recon, planning with approval gates, implementation, self-review, git and handoff.",
   "author": {
     "name": "Mokammel Tanvir"

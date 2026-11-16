@@ -3,22 +3,21 @@ Updated: 2026-11-15
 
 ## Now
 Methodology: hybrid
-v0.2.1 (2026-11-16): committed, pushed, tagged and published to npm on the
-owner's instruction in this session. Still ask before any later commit, push
-or publish. No co-author trailer.
+v0.3.0 (2026-11-16): committed, pushed, tagged, GitHub Pages enabled on the
+owner's instruction. npm still has 0.2.1 until the owner publishes.
+Always ask before any later commit, push or publish. No co-author trailer.
 
 ## Done this session
-- Checked ~/vibediscipline-demo-laravel (read only): a 0.1 install that `init`
-  was run over; scripts were old and the guard hook missing. Fix: `vibe upgrade`.
-- Fixed: `init` refuses on an existing install; `upgrade` handles a pre-marker
-  AGENTS.md; `doctor` compares files, not the version file.
-- CLI: colours, arrow-key menus, grouped doctor, `vibe uninstall`.
-- npm: `vibediscipline` published; docs use `npx vibediscipline`.
+- `vibe new`: 9 recipes through official scaffolders, each run for real
+  (exit 0, doctor 0 problems). Next.js and NestJS now ship their own
+  AGENTS.md; the installer merged above it with markers.
+- Landing page docs/index.html (not yet viewed in a browser by anyone).
+- Second bin name `vibediscipline`.
 
-## Next (owner)
-1. `npx vibediscipline upgrade` in the demo project, then an interactive session.
-2. Try node/python presets on real projects; record a demo GIF.
-Ideas not built: `vibe status`, second-turn evals, JavaScript pack.
+## Next
+1. Owner: `npm publish --access public` for 0.3.0; look at the landing page.
+2. Owner: upgrade the demo project; one interactive session.
+Ideas not built: two-app repositories, `vibe status`, second-turn evals.
 
 ## Open (needs the user)
 - Methodology default: assumed hybrid when unset, no forced prompt (TASK-002 Q1).

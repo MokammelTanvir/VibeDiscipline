@@ -2,6 +2,18 @@
 
 Notable changes to VibeDiscipline. Versions follow `.agent/VERSION`.
 
+## 0.3.0 — 2026-11-16
+
+### Added
+- `vibe new [name]`: creates a project with its framework's own scaffolder
+  (Laravel, Laravel with the React or Vue starter kit, Next.js, Django,
+  NestJS, or a React, Vue or Angular frontend), then installs VibeDiscipline
+  in it with the matching permissions preset. No framework code ships in
+  this package. Pairs with no official starter are refused with the reason.
+- `vibediscipline` as a second command name beside `vibe`.
+- `docs/index.html`: a landing page with the install tutorial, commands and
+  the evidence, ready for GitHub Pages.
+
 ## 0.2.1 — 2026-11-16
 
 Found by installing over a real project that still had a 0.1 install.

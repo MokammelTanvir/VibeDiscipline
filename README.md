@@ -16,9 +16,13 @@ Roadmap, current status and known limitations:
 ## Quickstart (about a minute)
 
 ```bash
-git clone https://github.com/MokammelTanvir/VibeDiscipline.git
-VibeDiscipline/scripts/install.sh /path/to/your/project
+cd your-project
+npx github:MokammelTanvir/VibeDiscipline init
 ```
+
+It detects your stack (Laravel, Node, Python, or generic), keeps every file
+you already have, and compiles the permissions. Full walkthrough,
+configuration and troubleshooting: **[docs/GUIDE.md](./docs/GUIDE.md)**.
 
 Open the project in Claude Code, accept the trust dialog, and ask for a
 change. The agent now states a tier before it starts
@@ -30,11 +34,9 @@ denies. Try it:
 - "Add notifications" → no code; it asks what kind, for whom, and how.
 - `bash -c "git reset --hard"` → refused by the guard hook.
 
-To remove it: delete `.agent/`, `.claude/hooks/vibe-*`, `.claude/skills/vibe-*`,
-`.githooks/` (then `git config --unset core.hooksPath`), the generated
-`permissions` block and the `vibe-guard` hook entry in `.claude/settings.json`,
-and the VibeDiscipline block at the top of `AGENTS.md`. Remove the hook entry
-together with the hook file, or every shell command will report a missing hook.
+Check an installation with `npx github:MokammelTanvir/VibeDiscipline doctor`,
+update it with `... upgrade`. Removing it is five steps in the
+[guide](./docs/GUIDE.md#uninstall).
 
 ## What the evidence says so far
 
@@ -78,16 +80,19 @@ npx degit MokammelTanvir/VibeDiscipline/.agent/skills .agent/skills
 /plugin install vibediscipline --marketplace MokammelTanvir/VibeDiscipline
 
 # Skills + enforced permissions + AGENTS.md (recommended for most projects)
+npx github:MokammelTanvir/VibeDiscipline init
+#   --stack laravel|node|python|generic   --methodology agile|waterfall|hybrid
+#   --skills-only   --dry-run   --force
+
+# The same installer from a clone, with no npx
 git clone https://github.com/MokammelTanvir/VibeDiscipline.git
 VibeDiscipline/scripts/install.sh /path/to/your/project
-#   --methodology agile|waterfall|hybrid   --skills-only   --dry-run   --force
 ```
 
 The installer never copies this repo's own `state.md` or stack settings,
 keeps every file you already have, and compiles the permissions. Then open
 the project in Claude Code once and accept the trust dialog: until a
-workspace is trusted, Claude Code ignores the compiled allow-list. A `vibe`
-CLI replaces this script in v0.3.
+workspace is trusted, Claude Code ignores the compiled allow-list.
 
 ### Already have an AGENTS.md or CLAUDE.md?
 
@@ -129,7 +134,10 @@ AGENTS.md                    the constitution (≤100 lines)
 .agent/ecosystems/php/        PHP/Composer-level knowledge
 .agent/adapters/laravel/      Laravel conventions + AI-specific pitfalls (Tier A)
 scripts/check.sh              vibe check — scope, secrets, leftovers, dependency, tests
-scripts/install.sh            install into an existing project
+bin/vibe.cjs                  the `vibe` CLI: init, upgrade, doctor, check, compile
+scripts/install.sh            the installer behind `vibe init`
+.agent/presets/               permission presets (node, python, generic) and a clean config
+docs/GUIDE.md                 the user guide
 scripts/set-methodology.cjs   select agile | waterfall | hybrid
 scripts/compile-permissions.cjs  permissions.yml -> settings, guard hook, git hooks, docs
 scripts/vibe-guard.cjs        PreToolUse hook: catches denied commands inside wrappers

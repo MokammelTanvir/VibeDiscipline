@@ -5,6 +5,14 @@ Notable changes to VibeDiscipline. Versions follow `.agent/VERSION`.
 ## Unreleased
 
 ### Added
+- `vibe` CLI (`bin/vibe.cjs`, zero dependencies), runnable without a clone:
+  `npx github:MokammelTanvir/VibeDiscipline init`. Commands: `init`,
+  `upgrade`, `doctor`, `check`, `compile`, `methodology`, `version`.
+- Permission presets for Node, Python and a generic fallback; the installer
+  picks one from the project's manifests (`--stack` overrides).
+- `install.sh --upgrade`: refreshes skills, packs, adapters and scripts and
+  keeps `config.yml`, `permissions.yml` and `state.md`.
+- `docs/GUIDE.md`: the user guide.
 - Guard hook (`scripts/vibe-guard.cjs`, installed as a Claude Code
   `PreToolUse` hook by the compiler). Denied and confirm-tier commands
   hidden inside `bash -c`, `eval`, `env`, `sudo`, `xargs` or `$(...)` are
@@ -19,6 +27,11 @@ Notable changes to VibeDiscipline. Versions follow `.agent/VERSION`.
   found, so no security skill was added. `evals/run/headless.sh` gained a
   baseline condition and now builds its repo with the real installer.
 - README: quickstart and an evidence table.
+
+### Fixed
+- A new install no longer inherits this repository's own `config.yml`. It
+  made a manifest change a blocking failure, so a user's first commit could
+  be refused. Installs now get a clean template.
 
 ### Changed
 - The compiler keeps hooks already present in `.claude/settings.json`.

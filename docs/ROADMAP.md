@@ -26,8 +26,8 @@ Not in v0.1: PRD/TRD/ADR templates, the UI/UX skill, more adapters, the
 ## v0.2 — Broaden
 
 Done so far: a guard hook for commands hidden in shell wrappers, a Claude
-Code skills bridge, a plugin manifest, tests for the scripts, and PRD, TRD
-and ADR templates.
+Code skills bridge, a plugin manifest, tests for the scripts, PRD, TRD
+and ADR templates, permission presets for Node and Python, and a user guide.
 
 Remaining:
 
@@ -43,10 +43,12 @@ Remaining:
 
 ## v0.3 — Tooling
 
-- The `vibe` CLI: init, doctor, compile, check, upgrade
+- The `vibe` CLI: a first version ships now (init, upgrade, doctor, check,
+  compile, methodology) and runs through `npx github:...`. Still to do: an
+  npm release, a Node port of the installer for native Windows
 - Bridges for Cursor, Copilot, Windsurf and Codex
 - Remaining ecosystem packs: ruby, go, jvm, dotnet, rust
-- Upgrade path with three-way merge
+- Three-way merge on upgrade (today an upgrade replaces edited skills)
 
 ## v1.0 — Standard
 

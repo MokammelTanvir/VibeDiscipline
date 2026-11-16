@@ -30,9 +30,9 @@ git/SKILL.md             professional git behavior: diff review, atomic commits
 handoff/SKILL.md         write cross-session state before a session ends
 ```
 
-More skills (discovery, product, architecture, ui-ux, testing, security,
-database, debug, refactor, dependency) ship in v0.2 once this core set is
-proven. The roadmap is in the VibeDiscipline repository's ROADMAP.
+A new skill is added only when a trap task shows a failure the existing
+ones do not prevent. Candidates (testing, debug, security, database,
+ui-ux, ...) are tracked in the VibeDiscipline repository's ROADMAP.
 
 ## How a skill decides how much to do
 

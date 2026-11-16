@@ -43,6 +43,10 @@ At Tier M the three are close on purpose: M is a single feature, and extra
 phases there would be ceremony inflation. The difference concentrates at
 Tier L and in how change is handled.
 
+Hybrid at Tier L: write the documents as drafts (no `approved_at`) only
+where the docs tree already exists. Otherwise outline them in the
+conversation, ask for the single approval, and write them after it.
+
 ## Phase and approval markers (waterfall)
 
 PRD and TRD carry the same frontmatter as a task doc: `approved_by` and

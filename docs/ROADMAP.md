@@ -1,7 +1,7 @@
 # Roadmap and status
 
 Where VibeDiscipline stands and what comes next. Percentages are
-effort-weighted estimates, not time tracking. Overall: about 30% of v1.0.
+effort-weighted estimates, not time tracking. Overall: about 45% of v1.0.
 
 ## v0.1 — Prove the concept (narrow and deep)
 
@@ -31,8 +31,10 @@ and ADR templates, permission presets for Node and Python, and a user guide.
 
 Remaining:
 
-- Skills: testing, security, debug, database, refactor, dependency,
-  discovery, product, architecture, ui-ux
+- Skills, **only where a trap shows a failure**. Three evals found no
+  code-level failure for a skill to fix on a current model, so the earlier
+  list of ten is no longer a commitment. Candidates stay: testing, debug,
+  security, database, ui-ux
 - Document templates: API-SPEC, UI-UX
 - Ecosystem packs: javascript, python. Tier-A adapters: nextjs, react,
   vue, nestjs, django
@@ -61,9 +63,10 @@ Remaining:
 
 Read these before relying on the project.
 
-- **Eval evidence is thin.** Three runs per cell, one model, and the
-  author both wrote the harness and graded the runs. Two of six traps
-  carry the whole measured difference.
+- **Eval evidence is thin, and model-dependent.** Three runs per cell, two
+  models, and the author both wrote the harness and graded the runs. The
+  behavioural gap shows on Haiku and closes on Sonnet; what holds on any
+  model is host enforcement and the recorded process.
 - **Stopping to ask has a cost.** In a non-interactive run, an agent that
   correctly stops for approval delivers nothing.
 - **The confirm gate is not reliable as prose.** In eval runs agents

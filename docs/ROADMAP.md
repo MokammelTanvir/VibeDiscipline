@@ -27,7 +27,9 @@ Not in v0.1: PRD/TRD/ADR templates, the UI/UX skill, more adapters, the
 
 Done so far: a guard hook for commands hidden in shell wrappers, a Claude
 Code skills bridge, a plugin manifest, tests for the scripts, PRD, TRD
-and ADR templates, permission presets for Node and Python, and a user guide.
+and ADR templates, permission presets for Node and Python, a user guide,
+`vibe new` (official scaffolders for nine setups), `vibe uninstall`, and a
+landing page.
 
 Remaining:
 

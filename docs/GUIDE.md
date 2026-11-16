@@ -42,6 +42,32 @@ git clone https://github.com/MokammelTanvir/VibeDiscipline.git
 VibeDiscipline/scripts/install.sh /path/to/your/project
 ```
 
+### A new project
+
+```bash
+npx vibediscipline new my-app
+```
+
+It asks for a backend and a frontend, runs that framework's own scaffolder,
+then installs VibeDiscipline in the new project:
+
+| Backend | Frontend | Runs |
+|---|---|---|
+| Laravel | none, React, Vue | `composer create-project` (the official starter kit for React or Vue) |
+| Next.js | built in | `create-next-app` |
+| Django | none | a virtual environment, then `django-admin startproject` |
+| NestJS | none | `@nestjs/cli new` |
+| none | React, Vue | `npm create vite` |
+| none | Angular | `@angular/cli new` |
+
+Without questions: `npx vibediscipline new my-app --backend laravel --frontend react`.
+`--dry-run` prints the commands and creates nothing. A pair with no official
+starter (Laravel with Angular, Django with React) is refused: create the
+frontend as its own project. The scaffolder needs its own tools installed
+(PHP and Composer, Python 3, or Node).
+
+### An existing project
+
 In a terminal `init` asks two questions with arrow-key menus (your stack,
 pre-selected from what it detects, and the methodology). Add `--yes` to
 take the defaults, as CI does. Preview first with `--dry-run`. If
@@ -242,7 +268,8 @@ Run any of them as `npx vibediscipline <command>`.
 
 | Command | Does |
 |---|---|
-| `vibe init [dir]` | Install. Options: `--stack`, `--methodology`, `--skills-only`, `--dry-run`, `--force` |
+| `vibe new [name]` | Create a project with its framework's scaffolder, then install. Options: `--backend`, `--frontend`, `--methodology`, `--dry-run` |
+| `vibe init [dir]` | Install into an existing project. Options: `--stack`, `--methodology`, `--skills-only`, `--dry-run`, `--force` |
 | `vibe upgrade [dir]` | Refresh skills, packs, adapters and scripts; keep your config, permissions and state |
 | `vibe doctor [dir]` | Check the installation and print the fix for each problem |
 | `vibe uninstall [dir]` | Remove VibeDiscipline, keeping your own files. Options: `--dry-run`, `--yes` |

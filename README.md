@@ -8,7 +8,7 @@ change, permissions compiled into real enforcement (not just prose an
 agent can drift away from), framework detection that works on any stack
 from day one, and an executable slop checker.
 
-**Status: v0.2.1 pre-release. One stack (Laravel) and one host (Claude
+**Status: v0.3.0 pre-release. One stack (Laravel) and one host (Claude
 Code) are covered in depth; the skills themselves are stack-neutral.**
 Roadmap, current status and known limitations:
 [`docs/ROADMAP.md`](./docs/ROADMAP.md).
@@ -20,7 +20,12 @@ cd your-project
 npx vibediscipline init
 ```
 
-It detects your stack (Laravel, Node, Python, or generic), keeps every file
+Starting from nothing? `npx vibediscipline new my-app` asks for a backend
+(Laravel, Next.js, Django, NestJS) and a frontend (React, Vue, Angular),
+runs that framework's own scaffolder, and installs VibeDiscipline in the
+result.
+
+`init` detects your stack (Laravel, Node, Python, or generic), keeps every file
 you already have, and compiles the permissions. Full walkthrough,
 configuration and troubleshooting: **[docs/GUIDE.md](./docs/GUIDE.md)**.
 
@@ -138,7 +143,8 @@ AGENTS.md                    the constitution (≤100 lines)
 .agent/ecosystems/php/        PHP/Composer-level knowledge
 .agent/adapters/laravel/      Laravel conventions + AI-specific pitfalls (Tier A)
 scripts/check.sh              vibe check — scope, secrets, leftovers, dependency, tests
-bin/vibe.cjs                  the `vibe` CLI: init, upgrade, doctor, check, compile
+bin/vibe.cjs                  the `vibe` CLI: new, init, upgrade, doctor, check, uninstall
+docs/index.html               landing page (GitHub Pages)
 scripts/install.sh            the installer behind `vibe init`
 .agent/presets/               permission presets (node, python, generic) and a clean config
 docs/GUIDE.md                 the user guide

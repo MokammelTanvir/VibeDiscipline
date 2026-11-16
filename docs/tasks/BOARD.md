@@ -10,3 +10,4 @@ Updated by the `handoff` skill after every commit at Tier M/L, and by the
 | TASK-002 | Methodology selection (agile / waterfall / hybrid) | M | done | |
 | TASK-003 | Install script (stopgap for `vibe init`) | M | done | |
 | TASK-004 | Claude Code packaging: guard hook, skills bridge, plugin | M | done | |
+| TASK-005 | `vibe` CLI, stack permission presets, user guide | M | done | |

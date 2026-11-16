@@ -67,6 +67,7 @@ jobs:
           node tests/guard.test.cjs
           tests/check.test.sh
           tests/install.test.sh
+          tests/cli.test.sh
 
       - name: plugin manifest is valid JSON with the required fields
         run: |
@@ -75,5 +76,6 @@ jobs:
             const m = require("./.claude-plugin/marketplace.json");
             const v = require("fs").readFileSync(".agent/VERSION", "utf8").split("\n")[0].trim();
             if (!p.name || !p.description || p.version !== v) throw new Error("plugin.json: name, description, and version matching .agent/VERSION (" + v + ") are required");
+            if (require("./package.json").version !== v) throw new Error("package.json version must match .agent/VERSION (" + v + ")");
             if (!m.plugins.some((x) => x.name === p.name)) throw new Error("marketplace.json does not list " + p.name);
           '

@@ -34,7 +34,8 @@ echo "== B re-run on A (idempotent)"
 cp AGENTS.md "$S/agents.before"
 "$I" "$S/a" >"$S/b.log" 2>&1; echo "  exit=$?"
 ok "AGENTS.md unchanged"            'cmp -s AGENTS.md "$S/agents.before"'
-ok "reports kept files"             'grep -q "kept existing files" "$S/b.log"'
+ok "says already installed, points at upgrade" 'grep -q "already installed" "$S/b.log" && grep -q "vibe upgrade" "$S/b.log"'
+ok "changed nothing"                '[ -z "$(git status --porcelain)" ]'
 ok "methodology still agile"        'grep -q "methodology: agile" .agent/config.yml'
 
 echo "== C project with its own files"
@@ -101,6 +102,22 @@ cd "$S/c" && sed -i.bak 's/^## Ceremony tiers.*/## OLD HEADING/' AGENTS.md && rm
 "$I" "$S/c" --upgrade >"$S/h3.log" 2>&1
 ok "AGENTS.md block refreshed, theirs kept" '! grep -q "OLD HEADING" AGENTS.md && grep -q "Use tabs." AGENTS.md && [ "$(grep -c "vibediscipline:start" AGENTS.md)" = 1 ]'
 mkdir -p "$S/h-none" && "$I" "$S/h-none" --upgrade >/dev/null 2>&1; ok "upgrade without an install exits 2" '[ $? -eq 2 ]'
+
+echo "== I upgrade of an old install (no markers, old scripts, no guard)"
+mkdir -p "$S/old" && cd "$S/old" && git init -q && touch artisan
+"$I" "$S/old" >/dev/null 2>&1
+# make it look like 0.1: old AGENTS.md text, an old script, no guard, the project's own text below
+sed -i.bak 's/^## Ceremony tiers.*/## Ceremony tiers (old)/' AGENTS.md && rm AGENTS.md.bak
+printf '\n<laravel-boost-guidelines>\nproject text\n</laravel-boost-guidelines>\n' >> AGENTS.md
+echo "# old" > scripts/check.sh; rm -r .claude/hooks scripts/vibe-guard.cjs
+node -e 'const f=".claude/settings.json",j=require("./"+f);delete j.hooks;require("fs").writeFileSync(f,JSON.stringify(j,null,2))'
+"$I" "$S/old" >"$S/i0.log" 2>&1
+ok "init refuses and leaves the old script" 'grep -q "already installed" "$S/i0.log" && grep -q "# old" scripts/check.sh'
+"$I" "$S/old" --upgrade >"$S/i.log" 2>&1; echo "  exit=$?"
+ok "old AGENTS.md text replaced"    '! grep -q "(old)" AGENTS.md && grep -q "^## Ceremony tiers — decide" AGENTS.md'
+ok "project text below is kept, once" '[ "$(grep -c "project text" AGENTS.md)" = 1 ] && [ "$(grep -c "vibediscipline:start" AGENTS.md)" = 1 ]'
+ok "scripts refreshed"              'cmp -s scripts/check.sh "$REPO/scripts/check.sh" && [ -f scripts/vibe-guard.cjs ]'
+ok "guard installed by the upgrade" '[ -f .claude/hooks/vibe-guard.cjs ] && grep -q vibe-guard .claude/settings.json'
 
 echo "== F bad input"
 "$I" >/dev/null 2>&1; ok "no target exits 2" '[ $? -eq 2 ]'

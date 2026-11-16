@@ -52,6 +52,16 @@ if [ "$UPGRADE" -eq 1 ] && [ ! -d "$TARGET/.agent/skills" ]; then
   exit 2
 fi
 
+# `init` on top of an existing install would keep every old script and
+# skill and only rewrite the version file, leaving a half-updated project.
+if [ "$UPGRADE" -eq 0 ] && [ "$FORCE" -eq 0 ] && [ "$SKILLS_ONLY" -eq 0 ] && [ -d "$TARGET/.agent/skills" ] && [ -f "$TARGET/AGENTS.md" ]; then
+  HAVE="$(head -1 "$TARGET/.agent/VERSION" 2>/dev/null || true)"
+  echo "[vibe] VibeDiscipline ${HAVE:-(unknown version)} is already installed in $TARGET"
+  echo "[vibe] nothing was changed. To update it to $(head -1 "$SRC/.agent/VERSION"), run:"
+  echo "[vibe]   vibe upgrade        (or: scripts/install.sh <dir> --upgrade)"
+  exit 0
+fi
+
 MARK_START="<!-- vibediscipline:start -->"
 MARK_END="<!-- vibediscipline:end -->"
 say() { echo "[vibe] $*"; }
@@ -151,8 +161,25 @@ elif [ "$UPGRADE" -eq 1 ] && grep -qF "$MARK_START" "$A" && grep -qF "$MARK_END"
     say "AGENTS.md: VibeDiscipline block refreshed, your content kept"
   fi
 elif [ "$UPGRADE" -eq 1 ] && ! cmp -s "$SRC/AGENTS.md" "$A"; then
-  say "AGENTS.md differs from the current version and has no markers — left alone."
-  say "  compare it with $SRC/AGENTS.md and merge by hand"
+  # An install from before the markers existed: the file starts with our
+  # title and our text ends with the "Adapt, don't override" section.
+  # Replace exactly that span; whatever follows it is the project's own.
+  END_LINE="$(awk '/^## Adapt, don.t override/ { found = 1; next } found && /^(#|<)/ { print NR - 1; exit } END { if (found) print NR }' "$A" | head -1)"
+  if [ "$(head -1 "$A")" = "# AGENTS.md — Project Constitution" ] && [ -n "$END_LINE" ]; then
+    if [ "$DRY" -eq 1 ]; then echo "  would: replace the old VibeDiscipline text in AGENTS.md (lines 1-$END_LINE)"; else
+      REST="$(tail -n +"$((END_LINE + 1))" "$A")"
+      if [ -n "$(printf '%s' "$REST" | tr -d '[:space:]')" ]; then
+        { echo "$MARK_START"; cat "$SRC/AGENTS.md"; echo "$MARK_END"; echo; printf '%s\n' "$REST"; } > "$A.tmp"
+      else
+        cp "$SRC/AGENTS.md" "$A.tmp"
+      fi
+      mv "$A.tmp" "$A"
+      say "AGENTS.md: updated to the current version, your content kept"
+    fi
+  else
+    say "AGENTS.md differs from the current version and has no markers — left alone."
+    say "  compare it with $SRC/AGENTS.md and merge by hand"
+  fi
 elif grep -qF "$MARK_START" "$A" || grep -q 'This project uses \*\*VibeDiscipline\*\*' "$A"; then
   say "AGENTS.md already contains VibeDiscipline — left alone"
 elif [ "$DRY" -eq 1 ]; then

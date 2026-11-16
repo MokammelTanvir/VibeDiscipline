@@ -1,6 +1,6 @@
 {
   "name": "vibediscipline",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An engineering discipline layer for AI coding agents: ceremony tiers, permissions compiled into enforcement, and an executable slop checker.",
   "bin": {
     "vibe": "bin/vibe.cjs"

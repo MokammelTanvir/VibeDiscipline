@@ -2,6 +2,33 @@
 
 Notable changes to VibeDiscipline. Versions follow `.agent/VERSION`.
 
+## 0.2.1 — 2026-11-16
+
+Found by installing over a real project that still had a 0.1 install.
+
+### Fixed
+- `init` over an existing install kept every old script and skill but
+  rewrote the version file, so the project looked current and the guard
+  hook was never installed. `init` now changes nothing there and points at
+  `upgrade`.
+- `upgrade` now replaces the VibeDiscipline text in an `AGENTS.md` written
+  before the markers existed, and keeps what follows it.
+- `doctor` compares the installed skills and scripts with this version
+  instead of trusting the version file, and sends you to `upgrade` when the
+  guard script itself is missing.
+
+### Added
+- `vibe uninstall`: removes what VibeDiscipline installed and keeps the
+  project's own rules, settings, skills, scripts and task docs. Asks first;
+  `--dry-run` previews.
+- Published to npm: `npx vibediscipline init`.
+
+### Changed
+- The CLI is coloured in a terminal: a banner, grouped `doctor` report,
+  arrow-key menus for stack and methodology in `init`, and next steps with
+  things to try. Piped, in CI or with `NO_COLOR` it prints plain text and
+  asks nothing. `--yes` skips the questions.
+
 ## 0.2.0 — 2026-11-16
 
 One-command install on four stacks, a CLI, a guard for wrapped commands,

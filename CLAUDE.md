@@ -8,7 +8,7 @@ Do not duplicate its content here; edit AGENTS.md instead.
 
 Live state: `.agent/state.md` · tasks: `docs/tasks/BOARD.md` · full design:
 `VibeDiscipline-Full-Plan.md` (gitignored, §45 roadmap, §45A readiness).
-Overall ≈ 45% of v1.0 (v0.1 100%, v0.2 ~45%, v0.3 ~30%, v1.0 ~12%). Repo is PUBLIC; v0.2.0 tagged and released (pre-release) 2026-11-16.
+Overall ≈ 45% of v1.0 (v0.1 100%, v0.2 ~45%, v0.3 ~30%, v1.0 ~12%). Repo is PUBLIC; v0.2.1 tagged, released (pre-release) and on npm, 2026-11-16.
 
 ## Done
 - v0.1 core: AGENTS.md (72 lines), 6 skills (recon, planning, implement,
@@ -47,12 +47,15 @@ Overall ≈ 45% of v1.0 (v0.1 100%, v0.2 ~45%, v0.3 ~30%, v1.0 ~12%). Repo is PU
   skills are evidence-gated (the list of ten is dropped), hybrid Tier L
   drafts documents only where the docs tree exists, TRAP-06 retired.
 
+- 2026-11-16, v0.2.1: `init` no longer half-updates an existing install,
+  `doctor` compares files instead of trusting VERSION, coloured interactive
+  CLI, `vibe uninstall`, published to npm as `vibediscipline`.
+
 ## A — What only the owner can do before a public launch
 - One interactive Claude Code session on a real project after install:
   trust dialog, allow-list, confirm prompt, tier line. All evidence so far
   is headless.
 - Use the node and python presets on a real project and report wrong lines.
-- `npm login`, check the name `vibediscipline`, `npm publish`.
 - A demo GIF or video for the README; then drop the pre-release flag.
 Note: `.agent/stack.lock.yml` is deliberately absent here; a template repo
 must not ship its own detected stack. `recon` writes it per project.
@@ -73,8 +76,8 @@ trap that shows the failure it fixes. Do not write them in bulk.
 18. README: 60-second quickstart, before/after demo, eval table, FAQ.
 
 ## C — v0.3 Tooling, then v1.0
-19. `vibe` CLI: first version done. Left: npm publish (check the name
-    first), Node port of install.sh and check.sh for native Windows.
+19. `vibe` CLI: done and on npm. Left: Node port of install.sh and check.sh
+    for native Windows.
 20. Bridges: Cursor, Copilot, Windsurf, Codex. Replace hand-rolled YAML parser.
 21. Remaining packs (ruby, go, jvm, dotnet, rust); upgrade path with merge.
 22. v1.0: spec freeze + compatibility promise, docs site, governance,

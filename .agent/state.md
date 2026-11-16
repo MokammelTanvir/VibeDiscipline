@@ -3,22 +3,22 @@ Updated: 2026-11-15
 
 ## Now
 Methodology: hybrid
-v0.2.0 (2026-11-16): CLI, presets, guard hook, guide. Owner said "do it all":
-commit, push, tag and release were done in this session on that instruction.
-Still ask before any later commit or push. No co-author trailer.
+v0.2.1 (2026-11-16): committed, pushed, tagged and published to npm on the
+owner's instruction in this session. Still ask before any later commit, push
+or publish. No co-author trailer.
 
 ## Done this session
-- Decisions: skills evidence-gated; hybrid Tier L drafts only where docs/
-  exists; TRAP-06 retired.
-- Second-model eval: TRAP-01 haiku 0/3 vs 3/3 (replicates), sonnet 3/3 vs 3/3.
-- Issue/PR templates, CODE_OF_CONDUCT, FAQ, version 0.2.0.
-- check.sh: version-only manifest bump is not a dependency change.
+- Checked ~/vibediscipline-demo-laravel (read only): a 0.1 install that `init`
+  was run over; scripts were old and the guard hook missing. Fix: `vibe upgrade`.
+- Fixed: `init` refuses on an existing install; `upgrade` handles a pre-marker
+  AGENTS.md; `doctor` compares files, not the version file.
+- CLI: colours, arrow-key menus, grouped doctor, `vibe uninstall`.
+- npm: `vibediscipline` published; docs use `npx vibediscipline`.
 
 ## Next (owner)
-1. Interactive session on a real project; report what breaks.
-2. Try node/python presets on real projects.
-3. npm login + publish (not logged in on this machine); demo GIF.
-Then: second-turn evals (after approval), JavaScript pack, full vibe check.
+1. `npx vibediscipline upgrade` in the demo project, then an interactive session.
+2. Try node/python presets on real projects; record a demo GIF.
+Ideas not built: `vibe status`, second-turn evals, JavaScript pack.
 
 ## Open (needs the user)
 - Methodology default: assumed hybrid when unset, no forced prompt (TASK-002 Q1).

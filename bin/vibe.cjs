@@ -34,9 +34,9 @@ const c = {
   red: paint("31"),
   green: paint("32"),
   yellow: paint("33"),
-  cyan: paint("36"),
+  cyan: paint("38;5;147"), // light indigo: selections, commands, links
   magenta: paint("35"),
-  title: paint("1;35"),
+  title: paint("1;38;5;105"), // brand indigo, as on the site (256-colour: works where truecolor does not)
 };
 const MARK = PRETTY
   ? { ok: c.green("✔"), warn: c.yellow("▲"), fail: c.red("✖"), dot: c.dim("·"), arrow: c.cyan("→") }

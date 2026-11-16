@@ -2,6 +2,15 @@
 
 Notable changes to VibeDiscipline. Versions follow `.agent/VERSION`.
 
+## Unreleased
+
+### Changed
+- Landing page redesigned: animated hero, a typed terminal demo with three
+  scenes, scroll reveals, a tier ladder, evidence bars, light and dark
+  themes. Motion is off under `prefers-reduced-motion`.
+- One brand colour, indigo, on the site and in the CLI (banner, menus,
+  commands) in place of the magenta, violet and cyan mix.
+
 ## 0.3.0 — 2026-11-16
 
 ### Added
